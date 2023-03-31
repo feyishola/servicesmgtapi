@@ -19,9 +19,6 @@
 .env.test.local
 .env.production.local
 *.env
-*.storage
-*/storage
-*storage
 
 npm-debug.log*
 yarn-debug.log*
