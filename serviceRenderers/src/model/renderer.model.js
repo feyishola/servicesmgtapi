@@ -35,7 +35,7 @@ serviceRendererSchema.pre('save', async function(next) {
 
 // const loc = await geocoder.batchGeocode([this.permanentAddress,this.temporaryAddress]);
 
-  console.log("testing location", loc);
+  // console.log("testing location", loc);
 
   this.location = {
     type: 'Point',

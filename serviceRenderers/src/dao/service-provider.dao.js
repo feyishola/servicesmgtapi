@@ -27,6 +27,11 @@ class ServiceProviderDao {
         return result
     }
 
+    async getUser(phoneNumber){
+        const result = await renderModel.findOne({phoneNumber})
+        return result
+    }
+
     async updateServiceProvider(id,phoneNumber,services,locationUpdate,permanentAddress,temporaryAddress,userType,password){
         
         const updates = await renderModel.findByIdAndUpdate({_id:id}, {$set:{phoneNumber,services,locationUpdate,permanentAddress,temporaryAddress,userType,password}})
