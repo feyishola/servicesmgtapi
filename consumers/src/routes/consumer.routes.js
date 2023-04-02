@@ -89,9 +89,9 @@ module.exports = ()=>{
             const services = await microServiceConnector('http://localhost:5000/api/v1/services/search',"POST",body)
 
             console.log({"gotten by consumer":services});
-            
+
             if(services.response == true){
-                console.log(services.payload);
+                
                 res.status(200).json({response:true, payload:services.payload})
             }else{
                 throw new error("error occurred getting services")
