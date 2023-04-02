@@ -18,6 +18,18 @@ module.exports = ()=>{
         
     })
 
+    api.post(`/search`, async(req,res)=>{
+        try {
+            const {service, lng, lat} = req.body
+            let result = await ServiceProviderDao.getRequiredServiceProviders(service,lng,lat)
+            console.log({result});
+            res.status(200).json({response:true, payload:result})
+        } catch (error) {
+            res.status(400).json({response:false, payload:error.message})
+        }
+        
+    })
+
     api.get('/:id', async(req,res)=>{
         try {
             const id = req.params.id

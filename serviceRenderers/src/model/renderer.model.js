@@ -27,6 +27,10 @@ const serviceRendererSchema = new Schema({
     createdAt:{type:Date,default:Date.now}
 })
 
+serviceRendererSchema.index({services:'text'})
+
+
+
 // Geocode & create location
 
 serviceRendererSchema.pre('save', async function(next) {
@@ -50,6 +54,8 @@ serviceRendererSchema.pre('save', async function(next) {
 
 const renderModel = model('serviceRenderer',serviceRendererSchema)
 
+// create the indexes
+//  renderModel.createIndexes();
 
 module.exports = renderModel
 

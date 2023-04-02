@@ -2,6 +2,7 @@ const consumerController = require('../controller/consumer.controller')
 const {Router} = require('express')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const microServiceConnector = require('../utils/nodefetch')
 
 module.exports = ()=>{
     const api = Router()
@@ -9,12 +10,15 @@ module.exports = ()=>{
     api.get('/', async(req,res)=>{
         try {
             let response = await consumerController.getAllConsumers()
+            
             res.status(200).json({response:true, payload:response})
         } catch (error) {
             res.status(500).json({response:false,payload:error.message})
         }
         
     });
+
+    
 
     api.get('/:id',async(req,res)=>{
         try {
@@ -72,13 +76,40 @@ module.exports = ()=>{
         }
     })
 
+    api.post('/search', async(req,res)=>{
+        try {
+            const {service, lng, lat} = req.body
+
+            let body = {
+                service,
+                lng,
+                lat
+            }
+
+            const services = await microServiceConnector('http://localhost:5000/api/v1/services/search',"POST",body)
+
+            console.log({"gotten by consumer":services});
+            
+            if(services.response == true){
+                console.log(services.payload);
+                res.status(200).json({response:true, payload:services.payload})
+            }else{
+                throw new error("error occurred getting services")
+            }
+        } catch (error) {
+            res.status(500).json({response:false,payload:error.message})
+        }
+    })
+
     api.put('/:id', async(req,res)=>{
         try {
             const id = req.params.id
 
             const {consumerName,phoneNumber,locationUpdate,permanentAddress,temporaryAddress,userType,password,services} = req.body
             
-            let response = await consumerController.updateConsumer(id,consumerName,phoneNumber,locationUpdate,permanentAddress,temporaryAddress,userType,password,services)
+            const saltRounds = 10
+            const newPassword = await bcrypt.hash(password,saltRounds)
+            let response = await consumerController.updateConsumer(id,consumerName,phoneNumber,locationUpdate,permanentAddress,temporaryAddress,userType,newPassword,services)
 
             res.status(200).json({response:true, payload:"Consumer record Updated"})
 
