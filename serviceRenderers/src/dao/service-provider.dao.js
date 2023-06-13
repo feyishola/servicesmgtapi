@@ -27,7 +27,7 @@ class ServiceProviderDao {
         return result
     }
 
-    async getRequiredServiceProviders(service,lng,lat){
+    async getRequiredServiceProviders(service,lng,lat,meters){
 
         const result = await renderModel.aggregate([
             {
@@ -38,7 +38,7 @@ class ServiceProviderDao {
                 },
                 distanceField: "distance",
                 spherical: true,
-                maxDistance: 5000
+                maxDistance: meters
               }
             },
             {
@@ -48,7 +48,7 @@ class ServiceProviderDao {
             }
           ]);
           
-        //   In this code, we first use $geoNear to find the documents within a 5000 meter radius of the given coordinates. We then use $match to filter the results based on the service name. The $regex operator is used to perform a case-insensitive search for the given service name. You can check down for the struggle before arriving at dis
+        //   In this code, we first use $geoNear to find the documents within a 5000 meter/ a certain distance in meters radius of the given coordinates. We then use $match to filter the results based on the service name. The $regex operator is used to perform a case-insensitive search for the given service name. You can check down for the struggle before arriving at dis
           return result;
         
     }

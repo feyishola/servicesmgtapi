@@ -78,12 +78,13 @@ module.exports = ()=>{
 
     api.post('/search', async(req,res)=>{
         try {
-            const {service, lng, lat} = req.body
+            const {service, lng, lat, meters} = req.body
 
             let body = {
                 service,
                 lng,
-                lat
+                lat,
+                meters
             }
 
             const services = await microServiceConnector('http://localhost:5000/api/v1/services/search',"POST",body)
