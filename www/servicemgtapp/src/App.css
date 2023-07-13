@@ -47,9 +47,7 @@
   -webkit-overflow-scrolling: touch; /* Optional: Enable smooth scrolling on iOS devices */
 }
 
-body{
-  background-color: rgba(0, 0, 0, 1.0); /* Dark transparent background */;
-}
+
 
 
 @keyframes App-logo-spin {

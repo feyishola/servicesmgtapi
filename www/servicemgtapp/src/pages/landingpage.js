@@ -4,6 +4,8 @@ import BackgroundPlayer from "../components/backgroundplayer/backgroundvideo";
 import { NavBar } from "../components/navbar";
 import { Headline } from "../components/headline";
 import { Box } from "@mui/material";
+import { Features } from "../components/features";
+import { HowItWorks } from "../components/howitworks";
 
 export const LandingPage = () => {
   return (
@@ -17,12 +19,14 @@ export const LandingPage = () => {
                 sx={{
                   mt: 15,
                   display: "flex",
-                  flexDirection: "row",
+                  flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
                 <Headline />
+                <Features />
+                <HowItWorks />
               </Box>
             </div>
           }
