@@ -9,6 +9,9 @@ import {
 } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import React from "react";
+import { useState } from "react";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
+import "./hiw.css";
 
 export const MuiCard = ({ width, height, img, title, body }) => {
   const [expanded, setExpanded] = React.useState(false);
@@ -46,6 +49,79 @@ export const MuiCard = ({ width, height, img, title, body }) => {
           </CardContent>
         </Collapse>
       </Card>
+    </Box>
+  );
+};
+
+export const TransitionCard = ({ img, title, body }) => {
+  const [expanded, setExpanded] = useState(false);
+  const [mode, setMode] = useState("out-in");
+
+  return (
+    <Box
+      sx={{
+        width: "350px",
+        // backgroundColor: "white",
+        minHeight: "370px",
+      }}
+    >
+      <SwitchTransition mode={mode}>
+        <CSSTransition
+          key={expanded ? "expanded" : "collapsed"}
+          addEndListener={(node, done) =>
+            node.addEventListener("transitionend", done, false)
+          }
+          classNames="fade"
+        >
+          <div>
+            <div>
+              <img
+                src={img}
+                alt="unsplash-image"
+                width={"350px"}
+                height={"200px"}
+              />
+              <h4
+                style={{
+                  fontFamily: "Roboto,Helvetica,Arial,sans-serif",
+                  fontSize: "24px",
+                  textAlign: "center",
+                  color: "rgba(6,21,81)",
+                }}
+              >
+                {title}
+              </h4>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mb: 1,
+                }}
+              >
+                <Button onClick={() => setExpanded(!expanded)}>
+                  {expanded ? "Collapse" : "Learn more"}
+                </Button>
+              </Box>
+            </div>
+            {expanded && (
+              <p
+                style={{
+                  fontFamily: "Roboto,Helvetica,Arial,sans-serif",
+                  fontSize: "14px",
+                  textAlign: "center",
+                  lineHeight: 1.43,
+                  letterSpacing: "0.01071em",
+                  color: "rgba(6,21,81)",
+                  width: "100%",
+                }}
+              >
+                {body}
+              </p>
+            )}
+          </div>
+        </CSSTransition>
+      </SwitchTransition>
     </Box>
   );
 };

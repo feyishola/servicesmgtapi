@@ -7,7 +7,7 @@ import { Box } from "@mui/material";
 import { Features } from "../components/features";
 import { HowItWorks } from "../components/howitworks";
 import { Footer } from "../components/footer";
-import { Testimonial } from "../components/testimonial";
+import { Demo } from "../components/demo";
 
 export const LandingPage = () => {
   return (
@@ -29,7 +29,7 @@ export const LandingPage = () => {
                 <Headline />
                 <Features />
                 <HowItWorks />
-                <Testimonial />
+                <Demo />
                 <Footer />
               </Box>
             </div>
