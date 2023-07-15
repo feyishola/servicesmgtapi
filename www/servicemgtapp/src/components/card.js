@@ -20,7 +20,7 @@ export const MuiCard = ({ width, height, img, title, body }) => {
         />
         <CardContent>
           <Typography variant="h5" component={"div"} gutterBottom>
-            {title}
+            <h4>{title}</h4>
           </Typography>
           <Typography variant="body2" color={"text.secondary"}>
             {body}

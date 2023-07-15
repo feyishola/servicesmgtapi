@@ -1,11 +1,16 @@
 import React from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 
 export const Headline = () => {
   return (
     <Box
       sx={{
         height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 5,
       }}
     >
       <Grid container spacing={1}>
@@ -18,15 +23,28 @@ export const Headline = () => {
               textAlign: "center",
             }}
           >
-            <span>The smartest way to enjoy and</span>
+            <span>Find and Connect with Service Providers</span>
             <br />
-            <span> manage services.</span>
+            <span> Effortlessly.</span>
           </h1>
           <p style={{ fontSize: "18px", color: "white", textAlign: "center" }}>
-            <span>Just a click away to the farthest reach...</span>
+            <span>
+              Simplify your service needs with our service management app
+            </span>
           </p>
         </Grid>
       </Grid>
+      <Button
+        variant="contained"
+        color="success"
+        size="large"
+        disableElevation
+        onClick={() => {
+          alert("testing all prpos");
+        }}
+      >
+        Get Started
+      </Button>
     </Box>
   );
 };

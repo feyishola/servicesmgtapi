@@ -6,6 +6,8 @@ import { Headline } from "../components/headline";
 import { Box } from "@mui/material";
 import { Features } from "../components/features";
 import { HowItWorks } from "../components/howitworks";
+import { Footer } from "../components/footer";
+import { Testimonial } from "../components/testimonial";
 
 export const LandingPage = () => {
   return (
@@ -17,7 +19,7 @@ export const LandingPage = () => {
               <NavBar />
               <Box
                 sx={{
-                  mt: 15,
+                  // mt: 15,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
@@ -27,6 +29,8 @@ export const LandingPage = () => {
                 <Headline />
                 <Features />
                 <HowItWorks />
+                <Testimonial />
+                <Footer />
               </Box>
             </div>
           }

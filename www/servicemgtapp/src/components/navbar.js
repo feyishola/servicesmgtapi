@@ -10,7 +10,7 @@ import {
 
 export const NavBar = () => {
   return (
-    <AppBar sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
+    <AppBar sx={{ boxShadow: "none", backgroundColor: "rgba(6,21,81,0.5)" }}>
       <Toolbar>
         <Typography variant="h6" component={"div"} sx={{ flexGrow: 1 }}>
           SMgtApp
