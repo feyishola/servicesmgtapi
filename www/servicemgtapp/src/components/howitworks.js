@@ -13,7 +13,7 @@ export const HowItWorks = () => {
   return (
     <Box
       sx={{
-        height: "150vh",
+        minHeight: "100vh",
         backgroundColor: "#F2F7FF",
         width: "100%",
       }}
@@ -82,7 +82,7 @@ export const HowItWorks = () => {
                 service renderers have the opportunity to cater to a wider range
                 of service needs. They can showcase their expertise in different
                 areas, increasing their chances of securing more service requests.`}
-                  title={"Access to Diverse Service Needs"}
+                  title={"Diverse Service Access"}
                 />
               </Box>
             </Grid>
