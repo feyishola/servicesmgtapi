@@ -56,6 +56,7 @@ export const MuiCard = ({ width, height, img, title, body }) => {
 export const TransitionCard = ({ img, title, body }) => {
   const [expanded, setExpanded] = useState(false);
   const [mode, setMode] = useState("out-in");
+  const [bounce, setBounce] = useState(false);
 
   return (
     <Box
@@ -64,6 +65,9 @@ export const TransitionCard = ({ img, title, body }) => {
         // backgroundColor: "white",
         minHeight: "370px",
       }}
+      className={bounce ? "card expanded" : "card"}
+      onMouseEnter={() => setBounce(true)}
+      onMouseLeave={() => setBounce(false)}
     >
       <SwitchTransition mode={mode}>
         <CSSTransition

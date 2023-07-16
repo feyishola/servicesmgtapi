@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
+import MyButton from "./animatedbutton";
 
 export const Headline = () => {
   return (
@@ -34,7 +35,7 @@ export const Headline = () => {
           </p>
         </Grid>
       </Grid>
-      <Button
+      {/* <Button
         variant="contained"
         color="success"
         size="large"
@@ -44,7 +45,13 @@ export const Headline = () => {
         }}
       >
         Get Started
-      </Button>
+      </Button> */}
+      <MyButton
+        text={"Get Started"}
+        onClick={() => {
+          alert("testing all props");
+        }}
+      />
     </Box>
   );
 };

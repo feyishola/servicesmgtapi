@@ -36,6 +36,14 @@
     display: block;
     margin: 0 auto;
   }
-
+  .card {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .card.expanded {
+    transform: scale(1.1);
+    
+  }
+  
   
   
