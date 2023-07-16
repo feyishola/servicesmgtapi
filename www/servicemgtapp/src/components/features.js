@@ -32,6 +32,7 @@ export const Features = () => {
               fontSize: "40px",
               color: "rgba(6,21,81)",
             }}
+            id="Features"
           >
             Features
           </h4>

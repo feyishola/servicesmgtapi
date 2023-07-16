@@ -43,6 +43,7 @@ export const HowItWorks = () => {
               textAlign: "center",
               color: "rgba(6,21,81)",
             }}
+            id="Service Renders"
           >
             Service Renderers Benefits
           </h4>
@@ -135,6 +136,7 @@ export const HowItWorks = () => {
               textAlign: "center",
               color: "rgba(6,21,81)",
             }}
+            id="Consumers"
           >
             Customers Benefits
           </h4>

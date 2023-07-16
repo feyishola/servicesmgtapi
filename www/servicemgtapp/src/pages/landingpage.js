@@ -25,11 +25,16 @@ export const LandingPage = () => {
                   alignItems: "center",
                   justifyContent: "center",
                 }}
+                id="Home"
               >
                 <Headline />
+
                 <Features />
+
                 <HowItWorks />
+
                 <Demo />
+
                 <Footer />
               </Box>
             </div>
