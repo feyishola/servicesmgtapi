@@ -1,14 +1,22 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Perform login logic here
     console.log(formData);
+    // Api call here
+    let tokenFromApi = 123456789;
+    localStorage.clear();
+    localStorage.setItem("tokens", JSON.stringify(tokenFromApi));
+    setTimeout(() => {
+      navigate("/serviceapp");
+    }, 1000);
   };
 
   return (
