@@ -1,4 +1,5 @@
 import { AppBar, Toolbar, Typography, Stack, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export const NavBar = () => {
   const handleScrollToSection = (sectionId) => {
@@ -48,12 +49,26 @@ export const NavBar = () => {
           <Button color="inherit" onClick={() => handleScrollToSection("Demo")}>
             Demo
           </Button>
-          <Button
-            color="inherit"
-            onClick={() => console.log("working on you next")}
+
+          <Link
+            to={"/login"}
+            style={{
+              textDecoration: "none",
+              textAlign: "center",
+              color: "inherit",
+              display: "flex",
+              alignItems: "center",
+              fontFamily: "Roboto,Helvetica,Arial,sans-serif",
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              lineHeight: 1.75,
+              textTransform: "uppercase",
+              minWidth: "64px",
+            }}
           >
             Login
-          </Button>
+          </Link>
+          {/* </span> */}
         </Stack>
       </Toolbar>
     </AppBar>

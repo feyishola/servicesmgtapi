@@ -13,7 +13,7 @@ const BackgroundPlayer = ({ children }) => {
           width: "100%",
           height: "100%",
           // backgroundBlendMode: "darken",
-          backgroundColor: "rgba(0,0,0 0.75)",
+          backgroundColor: "rgba(0,0,0,0.75)",
           filter: "brightness(40%)",
         }}
       >

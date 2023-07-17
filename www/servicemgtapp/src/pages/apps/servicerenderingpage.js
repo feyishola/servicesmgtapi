@@ -1,10 +1,10 @@
-import "../App.css";
+// import "../App.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { React, useState, useEffect } from "react";
 import ReactMapGl, { Marker, Popup } from "react-map-gl";
-import { env } from "../config";
-import { fectchApi } from "../utils/fetch";
-import "./landingpage.css";
+import { env } from "../../config";
+import { fectchApi } from "../../utils/fetch";
+// import "./landingpage.css";
 import {
   Box,
   Button,
