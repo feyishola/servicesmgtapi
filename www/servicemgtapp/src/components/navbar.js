@@ -52,6 +52,7 @@ export const NavBar = () => {
 
           <Link
             to={"/login"}
+            state={{ initialPageUrl: window.location.pathname }}
             style={{
               textDecoration: "none",
               textAlign: "center",
@@ -68,6 +69,7 @@ export const NavBar = () => {
           >
             Login
           </Link>
+
           {/* </span> */}
         </Stack>
       </Toolbar>

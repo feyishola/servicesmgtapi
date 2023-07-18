@@ -1,8 +1,10 @@
 import React from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import MyButton from "./animatedbutton";
+import { useNavigate } from "react-router-dom";
 
 export const Headline = () => {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -24,7 +26,7 @@ export const Headline = () => {
               textAlign: "center",
             }}
           >
-            <span>Find and Connect with Service Providers</span>
+            <span>Find and Connect with Service Renders</span>
             <br />
             <span> Effortlessly.</span>
           </h1>
@@ -49,7 +51,7 @@ export const Headline = () => {
       <MyButton
         text={"Get Started"}
         onClick={() => {
-          alert("testing all props");
+          navigate("/regpage");
         }}
       />
     </Box>

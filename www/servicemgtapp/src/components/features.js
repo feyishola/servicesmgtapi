@@ -56,23 +56,13 @@ export const Features = () => {
                 >
                   <span>
                     Finding reliable service providers for various needs can be
-                    a daunting and time-consuming task. Consumers often struggle
-                    to locate service renderers in their area,
-                  </span>
-                  {/* <br /> */}
-                  <span>
-                    assess their quality and reliability, and communicate
-                    effectively to book services. On the other hand, service
-                    renderers face challenges in
-                  </span>
-                  {/* <br /> */}
-                  <span>
-                    reaching a wider customer base and managing their bookings
-                    efficiently. This fragmented process can
-                  </span>
-                  {/* <br /> */}
-                  <span>
-                    lead to frustration, wasted time, and inconsistent service
+                    a daunting and time-consuming task. Service Consumers often
+                    struggle to locate service renders in their area, assess
+                    their quality and reliability, and communicate effectively
+                    to book services. On the other hand, service renders face
+                    challenges in reaching a wider customer base and managing
+                    their bookings efficiently. This fragmented process can lead
+                    to frustration, wasted time, and inconsistent service
                     experiences.
                   </span>
                 </p>
@@ -133,7 +123,7 @@ export const Features = () => {
                 <TransitionCard
                   img={comm}
                   title={"Reliable Communication Platform"}
-                  body={`Our app provides a seamless communication platform, enabling direct and real-time interaction between consumers and service renderers. This facilitates efficient discussions, clarifications, and updates throughout the service process, ensuring a smooth and transparent experience for all parties involved.`}
+                  body={`Our app provides a seamless communication platform, enabling direct and real-time interaction between service consumers and service renders. This facilitates efficient discussions, clarifications, and updates throughout the service process, ensuring a smooth and transparent experience for all parties involved.`}
                 />
               </Box>
             </Grid>
@@ -155,7 +145,7 @@ export const Features = () => {
                 <TransitionCard
                   img={selection}
                   title={"Proximity and Ratings-Based Selection"}
-                  body={`With our app, consumers can easily search for service providers based on their proximity, ensuring quick response times and reduced travel distances. Additionally, our platform incorporates ratings and reviews from previous customers, empowering consumers to make informed decisions based on the experiences of others.`}
+                  body={`With our app, service consumers can easily search for service providers based on their proximity, ensuring quick response times and reduced travel distances. Additionally, our platform incorporates ratings and reviews from previous customers, empowering consumers to make informed decisions based on the experiences of others.`}
                 />
               </Box>
             </Grid>
@@ -178,7 +168,7 @@ export const Features = () => {
                 <TransitionCard
                   img={ratings}
                   title={"Customer Reviews and Ratings"}
-                  body={`Our app offers service renderers the opportunity to showcase their expertise, build a strong reputation, and reach a larger customer base. By receiving ratings, reviews, and recommendations from satisfied customers, service providers can boost their visibility and attract more clients.`}
+                  body={`Our app offers service renders the opportunity to showcase their expertise, build a strong reputation, and reach a larger customer base. By receiving ratings, reviews, and recommendations from satisfied customers, service providers can boost their visibility and attract more clients.`}
                 />
               </Box>
             </Grid>
@@ -200,7 +190,7 @@ export const Features = () => {
                 <TransitionCard
                   img={payment}
                   title={"Secure Payment Integration"}
-                  body={`We have integrated a secure payment platform within our app, allowing consumers to make payments for services with confidence. This eliminates the need for cash transactions and provides a convenient and hassle-free experience for both consumers and service renderers.`}
+                  body={`We have integrated a secure payment platform within our app, allowing consumers to make payments for services with confidence. This eliminates the need for cash transactions and provides a convenient and hassle-free experience for both consumers and service renders.`}
                 />
               </Box>
             </Grid>

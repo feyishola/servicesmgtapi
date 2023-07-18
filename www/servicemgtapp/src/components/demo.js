@@ -1,8 +1,10 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React from "react";
 import img1 from "../images/andrew-stutesman-l68Z6eF2peA-unsplash.jpg";
+import { useNavigate } from "react-router-dom";
 
 export const Demo = () => {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -108,10 +110,9 @@ export const Demo = () => {
               "& > :not(style)": { m: 1, width: "360px" },
             }}
             fullWidth
-            // onClick={() => {
-            //   // console.log(formVal);
-            //   getServices();
-            // }}
+            onClick={() => {
+              navigate("page-not-found");
+            }}
           >
             Submit
           </Button>

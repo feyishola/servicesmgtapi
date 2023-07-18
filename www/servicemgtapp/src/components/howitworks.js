@@ -8,8 +8,11 @@ import convenience from "../images/convenience.jpg";
 import choices from "../images/choices.jpg";
 import communication from "../images/communication.jpg";
 import { MuiCard, TransitionCard } from "./card";
+import MyButton from "./animatedbutton";
+import { useNavigate } from "react-router-dom";
 
 export const HowItWorks = () => {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -45,7 +48,7 @@ export const HowItWorks = () => {
             }}
             id="Service Renders"
           >
-            Service Renderers Benefits
+            Service Renders Benefits
           </h4>
           <Grid container sx={{ justifyContent: "space-around" }} gap={2}>
             <Grid
@@ -62,7 +65,7 @@ export const HowItWorks = () => {
                 img={incrvis4}
                 title={"Increased Visibility"}
                 body={`By using our service management app,
-                service renderers can expand their reach and gain exposure to a
+                service renders can expand their reach and gain exposure to a
                 larger pool of potential customers. This increased visibility
                 helps them attract new clients and grow their business.`}
               />
@@ -79,7 +82,7 @@ export const HowItWorks = () => {
             >
               <TransitionCard
                 body={`A larger customer base means
-                service renderers have the opportunity to cater to a wider range
+                service renders have the opportunity to cater to a wider range
                 of service needs. They can showcase their expertise in different
                 areas, increasing their chances of securing more service requests.`}
                 img={connect}
@@ -98,7 +101,7 @@ export const HowItWorks = () => {
             >
               <TransitionCard
                 body={`Reaching a larger customer base opens up avenues
-                for business growth, as service renderers can tap into new markets
+                for business growth, as service renders can tap into new markets
                 and extend their services to a broader audience. This growth
                 translates into higher revenue potential and increased
                 profitability.`}
@@ -127,6 +130,19 @@ export const HowItWorks = () => {
               </Box>
             </Grid> */}
           </Grid>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <MyButton
+              onClick={() => {
+                navigate("/renderreg");
+              }}
+              text={"Sign Up as a Service Render"}
+            />
+          </Box>
         </Box>
         <Box>
           <h4
@@ -138,7 +154,7 @@ export const HowItWorks = () => {
             }}
             id="Consumers"
           >
-            Customers Benefits
+            Service Consumer's Benefits
           </h4>
           <Grid container sx={{ justifyContent: "space-around" }}>
             <Grid
@@ -216,12 +232,25 @@ export const HowItWorks = () => {
                 title={"Direct Interaction"}
                 body={`Our app facilitates secure communication
                 channels between consumers and service providers. Consumers can
-                easily communicate with service renderers, discuss their service
+                easily communicate with service renders, discuss their service
                 requirements, ask questions, and receive prompt responses,
                 ensuring a smooth and transparent communication experience.`}
               />
             </Grid>
           </Grid>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <MyButton
+              onClick={() => {
+                navigate("/consumerreg");
+              }}
+              text={"Sign Up as a Consumer"}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -1,22 +1,14 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const LoginPage = () => {
+const SrRegistrationPage = () => {
   const [formData, setFormData] = useState({});
-  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Perform login logic here
+    // Perform registration logic here
     console.log(formData);
-    // Api call here
-    let tokenFromApi = 123456789;
-    localStorage.clear();
-    localStorage.setItem("token", JSON.stringify(tokenFromApi));
-    setTimeout(() => {
-      navigate("/serviceapp");
-    }, 1000);
   };
 
   return (
@@ -32,15 +24,46 @@ const LoginPage = () => {
       <Container maxWidth="sm">
         <form onSubmit={handleSubmit}>
           <TextField
-            label="Phone Number"
-            name="phoneNumber"
+            label="Name"
+            name="serviceRendererName"
             fullWidth
-            //   value={email}
+            //   value={name}
             onChange={(e) =>
               setFormData({ ...formData, [e.target.name]: e.target.value })
             }
             sx={{ mb: 2 }}
           />
+          <TextField
+            label="Phone Number"
+            name="phoneNumber"
+            fullWidth
+            //   value={name}
+            onChange={(e) =>
+              setFormData({ ...formData, [e.target.name]: e.target.value })
+            }
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Service to offer"
+            name="services"
+            fullWidth
+            //   value={name}
+            onChange={(e) =>
+              setFormData({ ...formData, [e.target.name]: e.target.value })
+            }
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Address"
+            name="permanentAddress"
+            fullWidth
+            //   value={name}
+            onChange={(e) =>
+              setFormData({ ...formData, [e.target.name]: e.target.value })
+            }
+            sx={{ mb: 2 }}
+          />
+
           <TextField
             label="Password"
             type="password"
@@ -53,7 +76,7 @@ const LoginPage = () => {
             sx={{ mb: 2 }}
           />
           <Button type="submit" variant="contained" color="success" fullWidth>
-            Sign In
+            Register
           </Button>
         </form>
         <p
@@ -62,10 +85,9 @@ const LoginPage = () => {
             textAlign: "center",
             color: "green",
             fontSize: "15px",
-            marginTop: "35px",
           }}
         >
-          Need an account?
+          Already have an account?
           <Link
             style={{
               textDecoration: "none",
@@ -74,7 +96,7 @@ const LoginPage = () => {
               fontSize: "17px",
               fontWeight: "bolder",
             }}
-            to={"/regpage"}
+            to={"/login"}
             state={{ initialPageUrl: window.location.pathname }}
           >
             {" "}
@@ -86,4 +108,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SrRegistrationPage;

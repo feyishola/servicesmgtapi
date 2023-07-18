@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-const RegistrationPage = () => {
+const ConsumerRegistrationPage = () => {
   const [formData, setFormData] = useState({});
 
   const handleSubmit = (e) => {
@@ -22,13 +22,10 @@ const RegistrationPage = () => {
       }}
     >
       <Container maxWidth="sm">
-        <Typography variant="h4" align="center" sx={{ mb: 4 }}>
-          Registration
-        </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
             label="Name"
-            name="serviceRendererName"
+            name="consumerName"
             fullWidth
             //   value={name}
             onChange={(e) =>
@@ -46,16 +43,7 @@ const RegistrationPage = () => {
             }
             sx={{ mb: 2 }}
           />
-          <TextField
-            label="Service to offer"
-            name="services"
-            fullWidth
-            //   value={name}
-            onChange={(e) =>
-              setFormData({ ...formData, [e.target.name]: e.target.value })
-            }
-            sx={{ mb: 2 }}
-          />
+
           <TextField
             label="Address"
             name="permanentAddress"
@@ -100,6 +88,7 @@ const RegistrationPage = () => {
               fontWeight: "bolder",
             }}
             to={"/login"}
+            state={{ initialPageUrl: window.location.pathname }}
           >
             {" "}
             Click Here
@@ -110,4 +99,4 @@ const RegistrationPage = () => {
   );
 };
 
-export default RegistrationPage;
+export default ConsumerRegistrationPage;
