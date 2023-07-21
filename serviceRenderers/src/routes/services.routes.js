@@ -3,20 +3,26 @@ const ServiceProviderDao = require("../dao/service-provider.dao");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const geocoder = require("../utils/geocoder");
+const Authentication = require("../middleware/authentication");
+const Authorization = require("../middleware/authorization");
 
 const { Router } = express;
 
 module.exports = () => {
   const api = Router();
 
-  api.get("/", async (req, res) => {
-    try {
-      let result = await ServiceProviderDao.getAllServiceProviders();
-      res.status(200).json({ response: true, payload: result });
-    } catch (error) {
-      res.status(400).json({ response: false, payload: error.message });
+  api.get(
+    "/",
+    [Authentication, Authorization(["consumer"])],
+    async (req, res) => {
+      try {
+        let result = await ServiceProviderDao.getAllServiceProviders();
+        res.status(200).json({ response: true, payload: result });
+      } catch (error) {
+        res.status(400).json({ response: false, payload: error.message });
+      }
     }
-  });
+  );
 
   api.post(`/search`, async (req, res) => {
     try {
