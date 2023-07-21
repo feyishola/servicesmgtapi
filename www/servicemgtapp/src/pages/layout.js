@@ -8,23 +8,24 @@ export const Layout = ({ children, name, info }) => {
   const navigate = useNavigate();
   const path = location.pathname.split("/")[1];
   const changeRoute = () => {
-    switch (path) {
-      case "login":
-        navigate("/");
-        break;
-      case "regpage":
-        navigate("/login");
-        break;
-      case "consumerreg":
-        navigate("/regpage");
-        break;
-      case "renderreg":
-        navigate("/regpage");
-        break;
-      default:
-        navigate("/");
-        break;
-    }
+    navigate(-1);
+    // switch (path) {
+    //   case "login":
+    //     navigate("/");
+    //     break;
+    //   case "regpage":
+    //     navigate("/login");
+    //     break;
+    //   case "consumerreg":
+    //     navigate("/regpage");
+    //     break;
+    //   case "renderreg":
+    //     navigate("/regpage");
+    //     break;
+    //   default:
+    //     navigate("/");
+    //     break;
+    // }
   };
   return (
     <Grid

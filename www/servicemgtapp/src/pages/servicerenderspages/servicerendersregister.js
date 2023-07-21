@@ -1,14 +1,25 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getRequest, postRequest } from "../../utils/apicalls";
 
-const ConsumerRegistrationPage = () => {
+const SrRegistrationPage = () => {
   const [formData, setFormData] = useState({});
+  const [error, setError] = useState();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Perform registration logic here
-    console.log(formData);
+    try {
+      const res = await postRequest("/services/", formData);
+
+      if (res) {
+        navigate("/login");
+      }
+    } catch (error) {
+      setError(error);
+    }
   };
 
   return (
@@ -25,7 +36,7 @@ const ConsumerRegistrationPage = () => {
         <form onSubmit={handleSubmit}>
           <TextField
             label="Name"
-            name="consumerName"
+            name="serviceRendererName"
             fullWidth
             //   value={name}
             onChange={(e) =>
@@ -43,7 +54,16 @@ const ConsumerRegistrationPage = () => {
             }
             sx={{ mb: 2 }}
           />
-
+          <TextField
+            label="Service to offer"
+            name="services"
+            fullWidth
+            //   value={name}
+            onChange={(e) =>
+              setFormData({ ...formData, [e.target.name]: e.target.value })
+            }
+            sx={{ mb: 2 }}
+          />
           <TextField
             label="Address"
             name="permanentAddress"
@@ -66,6 +86,15 @@ const ConsumerRegistrationPage = () => {
             }
             sx={{ mb: 2 }}
           />
+          {error && (
+            <Typography
+              variant="body1"
+              color={"error"}
+              sx={{ textAlign: "center", m: 1 }}
+            >
+              {error}
+            </Typography>
+          )}
           <Button type="submit" variant="contained" color="success" fullWidth>
             Register
           </Button>
@@ -99,4 +128,4 @@ const ConsumerRegistrationPage = () => {
   );
 };
 
-export default ConsumerRegistrationPage;
+export default SrRegistrationPage;

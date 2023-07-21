@@ -3,10 +3,10 @@ import { LandingPage } from "./pages/landingpage/landingpage";
 import ServiceRendering from "./pages/apps/servicerenderingpage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/login";
-import SrRegistrationPage from "./pages/servicerendersregister";
+import SrRegistrationPage from "./pages/servicerenderspages/servicerendersregister";
 import Protected from "./routes/protectedroute";
-import ConsumerRegistrationPage from "./pages/consumersregister";
-import { RegPageIntro } from "./pages/regintropage";
+import ConsumerRegistrationPage from "./pages/consumerpages/consumersregister";
+import { LinksToRegPage } from "./pages/reglinks";
 import { Layout } from "./pages/layout";
 import { PageNotFound } from "./pages/404page";
 
@@ -54,7 +54,7 @@ function App() {
           path="/regpage"
           element={
             <Layout name={"Choose Registration Form"} info={""}>
-              <RegPageIntro />
+              <LinksToRegPage />
             </Layout>
           }
         />

@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { postRequest } from "../../utils/apicalls";
 
 function ServiceRendering() {
   const [viewport, setViewport] = useState({
@@ -72,18 +73,20 @@ function ServiceRendering() {
 
       Object.keys(formVal).forEach(async (key) => {
         if (key == "address") {
-          const response = await fectchApi(
-            `${env.baseUrl}/api/v1/services/searchaddr`,
-            "POST",
-            formVal
-          );
+          // const response = await fectchApi(
+          //   `${env.baseUrl}/services/searchaddr`,
+          //   "POST",
+          //   formVal
+          // );
+          const response = await postRequest("/services/searchaddr", formVal);
           setSelectedServices(response);
         } else {
-          const response = await fectchApi(
-            `${env.baseUrl}/api/v1/services/search`,
-            "POST",
-            formVal
-          );
+          // const response = await fectchApi(
+          //   `${env.baseUrl}/services/search`,
+          //   "POST",
+          //   formVal
+          // );
+          const response = await postRequest("/services/search", formVal);
           setSelectedServices(response);
           console.log({ selectedServices: response });
         }

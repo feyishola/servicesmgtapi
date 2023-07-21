@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, Container, Box } from "@mui/material";
+import { TextField, Button, Container, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const SrRegistrationPage = () => {
+const ConsumerRegistrationPage = () => {
   const [formData, setFormData] = useState({});
 
   const handleSubmit = (e) => {
@@ -25,7 +25,7 @@ const SrRegistrationPage = () => {
         <form onSubmit={handleSubmit}>
           <TextField
             label="Name"
-            name="serviceRendererName"
+            name="consumerName"
             fullWidth
             //   value={name}
             onChange={(e) =>
@@ -43,16 +43,7 @@ const SrRegistrationPage = () => {
             }
             sx={{ mb: 2 }}
           />
-          <TextField
-            label="Service to offer"
-            name="services"
-            fullWidth
-            //   value={name}
-            onChange={(e) =>
-              setFormData({ ...formData, [e.target.name]: e.target.value })
-            }
-            sx={{ mb: 2 }}
-          />
+
           <TextField
             label="Address"
             name="permanentAddress"
@@ -108,4 +99,4 @@ const SrRegistrationPage = () => {
   );
 };
 
-export default SrRegistrationPage;
+export default ConsumerRegistrationPage;

@@ -4,7 +4,7 @@ import consumer from "../images/consumer.jpg";
 import service from "../images/service2.jpg";
 import { Link } from "react-router-dom";
 
-export const RegPageIntro = () => {
+export const LinksToRegPage = () => {
   return (
     <Box
       sx={{

@@ -1,16 +1,19 @@
-const fectchApiFrontend = (path, method = "GET", payload) => {
+const fectchApiFrontend = (path, method = "GET", payload, token) => {
   return new Promise(async (resolve, reject) => {
     const request = await fetch(path, {
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": { token },
+      },
       method,
-      body: JSON.stringify(payload),
+      body: payload ? JSON.stringify(payload) : null,
     });
     const response = await request.json();
     console.log(response);
     if (response.response) {
       resolve(response.payload);
     } else {
-      reject("error occured in fetching data");
+      reject(response.payload || "error occured in fetching data");
     }
   });
 };

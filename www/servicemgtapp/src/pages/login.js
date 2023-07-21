@@ -1,22 +1,31 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { postRequest } from "../utils/apicalls";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({});
+  const [error, setError] = useState();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Perform login logic here
-    console.log(formData);
-    // Api call here
-    let tokenFromApi = 123456789;
-    localStorage.clear();
-    localStorage.setItem("token", JSON.stringify(tokenFromApi));
-    setTimeout(() => {
-      navigate("/serviceapp");
-    }, 1000);
+
+    try {
+      const res = await postRequest("/services/login", formData);
+
+      if (res) {
+        const { token } = res;
+        localStorage.clear();
+        localStorage.setItem("token", JSON.stringify(token));
+        setTimeout(() => {
+          //Dashboard
+          navigate("/serviceapp");
+        }, 1000);
+      }
+    } catch (error) {
+      setError(error);
+    }
   };
 
   return (
@@ -52,6 +61,15 @@ const LoginPage = () => {
             }
             sx={{ mb: 2 }}
           />
+          {error && (
+            <Typography
+              variant="body1"
+              color={"error"}
+              sx={{ textAlign: "center", m: 1 }}
+            >
+              {error}
+            </Typography>
+          )}
           <Button type="submit" variant="contained" color="success" fullWidth>
             Sign In
           </Button>
