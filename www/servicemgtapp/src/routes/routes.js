@@ -2,7 +2,16 @@ import { Route } from "react-router-dom";
 import ServiceRendering from "../pages/apps/servicerenderingpage";
 import { LandingPage } from "../pages/landingpage/landingpage";
 import LoginPage from "../pages/login";
-import RegistrationPage from "../pages/register";
+// import InboxIcon from "@mui/icons-material/MoveToInbox";
+// import MailIcon from "@mui/icons-material/Mail";
+// import { CgMenuRight, CgMenuLeft } from "react-icons/cg";
+import SettingsIcon from "@mui/icons-material/Settings";
+import DownloadIcon from "@mui/icons-material/Download";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import WalletIcon from "@mui/icons-material/Wallet";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import HelpIcon from "@mui/icons-material/Help";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
 
 export const privateRoutes = [
   {
@@ -23,11 +32,7 @@ export const publicRoutes = [
     path: "/login",
     element: <LoginPage />,
   },
-  {
-    name: "Register",
-    path: "/register",
-    element: <RegistrationPage />,
-  },
+
   {
     name: "Home",
     path: "/",
@@ -40,3 +45,38 @@ export const getRoutes = (allRoutes) => {
     <Route path={route.path} element={route.element} key={index + 1} />
   ));
 };
+
+export const serviceRendersRoutesDashboard = [
+  {
+    name: "Analytics",
+    icon: <AnalyticsIcon />,
+    to: "/dashboard",
+  },
+
+  {
+    name: "Payment",
+    icon: <WalletIcon />,
+    to: "/payment",
+  },
+  {
+    name: "Alerts",
+    icon: <NotificationsIcon />,
+    to: "/alert",
+  },
+
+  {
+    name: "Manage Services",
+    icon: <SupportAgentIcon />,
+    to: "/manageservices",
+  },
+  {
+    name: "Settings",
+    icon: <SettingsIcon />,
+    to: "/setting",
+  },
+  {
+    name: "Support Center",
+    icon: <HelpIcon />,
+    to: "/supportcenter",
+  },
+];

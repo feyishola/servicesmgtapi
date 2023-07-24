@@ -9,6 +9,9 @@ import ConsumerRegistrationPage from "./pages/consumerpages/consumersregister";
 import { LinksToRegPage } from "./pages/reglinks";
 import { Layout } from "./pages/layout";
 import { PageNotFound } from "./pages/404page";
+import MyDrawer from "./components/drawer";
+import { serviceRendersRoutesDashboard } from "./routes/routes";
+import { SRDashboard } from "./pages/servicerenderspages/dashboard";
 
 function App() {
   return (
@@ -58,7 +61,15 @@ function App() {
             </Layout>
           }
         />
-
+        <Route
+          path="/dashboard"
+          element={
+            <MyDrawer
+              navRoutes={serviceRendersRoutesDashboard}
+              children={<SRDashboard />}
+            />
+          }
+        />
         <Route
           path="*"
           element={
