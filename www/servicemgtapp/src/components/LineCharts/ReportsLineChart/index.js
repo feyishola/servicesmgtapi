@@ -36,6 +36,7 @@ import {
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
+import ScheduleIcon from "@mui/icons-material/Schedule";
 
 // Material Dashboard 2 React components
 // import MDBox from "components/MDBox";
@@ -99,7 +100,8 @@ function ReportsLineChart({ bgColor, color, title, description, date, chart }) {
               lineHeight={1}
               sx={{ mt: 0.15, mr: 0.5 }}
             >
-              <Icon>schedule</Icon>
+              {/* <Icon>schedule</Icon> */}
+              <ScheduleIcon />
             </Typography>
             <Typography variant="button" color="text" fontWeight="light">
               {date}

@@ -20,7 +20,7 @@ const LoginPage = () => {
         localStorage.setItem("token", JSON.stringify(token));
         setTimeout(() => {
           //Dashboard
-          navigate("/serviceapp");
+          navigate("/dashboard");
         }, 1000);
       }
     } catch (error) {

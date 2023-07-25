@@ -7,6 +7,11 @@ import ReportsBarChart from "../../components/ReportsBarChart";
 import reportsBarChartData from "../../components/ReportsBarChart/reportsBarChartData";
 import ReportsLineChart from "../../components/LineCharts/ReportsLineChart";
 import reportsLineChartData from "../../components/LineCharts/ReportsLineChart/reportsLineChartData";
+import GradeIcon from "@mui/icons-material/Grade";
+import WeekendIcon from "@mui/icons-material/Weekend";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import HailIcon from "@mui/icons-material/Hail";
+import EmailIcon from "@mui/icons-material/Email";
 import ReactTable from "../../components/table/table";
 
 export const SRDashboard = () => {
@@ -19,7 +24,7 @@ export const SRDashboard = () => {
           <ComplexStatisticsCard
             color="success"
             bgcolor={"#42424a"}
-            icon="weekend"
+            icon={<WeekendIcon fontSize="medium" style={{ color: "white" }} />}
             title="Bookings"
             count={281}
             percentage={{
@@ -33,8 +38,8 @@ export const SRDashboard = () => {
           <ComplexStatisticsCard
             color="success"
             bgcolor={"#49a3f1"}
-            icon="weekend"
-            title="Bookings"
+            icon={<EmailIcon style={{ color: "white" }} />}
+            title="Messages"
             count={281}
             percentage={{
               color: "success",
@@ -47,8 +52,8 @@ export const SRDashboard = () => {
           <ComplexStatisticsCard
             color="success"
             bgcolor={"#66BB6A"}
-            icon="weekend"
-            title="Bookings"
+            icon={<HailIcon style={{ color: "white" }} />}
+            title="Referrals"
             count={281}
             percentage={{
               color: "success",
@@ -61,8 +66,8 @@ export const SRDashboard = () => {
           <ComplexStatisticsCard
             color="success"
             bgcolor={"#EC407A"}
-            icon="weekend"
-            title="Bookings"
+            icon={<GradeIcon style={{ color: "white" }} />}
+            title="Ratings"
             count={281}
             percentage={{
               color: "success",
@@ -79,8 +84,8 @@ export const SRDashboard = () => {
               color="info"
               bgColor={"#49a3f1"}
               title="website views"
-              description="Last Campaign Performance"
-              date="campaign sent 2 days ago"
+              description="Weekly website views"
+              date="3rd week July"
               chart={reportsBarChartData}
             />
           </Grid>
@@ -101,7 +106,7 @@ export const SRDashboard = () => {
           <Grid item xs={12} md={6} lg={4}>
             <ReportsLineChart
               bgColor={"#42424a"}
-              title="completed tasks"
+              title="Yearly reviews"
               description="Last Campaign Performance"
               date="just updated"
               chart={tasks}

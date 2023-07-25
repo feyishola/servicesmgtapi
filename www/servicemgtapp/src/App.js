@@ -12,6 +12,7 @@ import { PageNotFound } from "./pages/404page";
 import MyDrawer from "./components/drawer";
 import { serviceRendersRoutesDashboard } from "./routes/routes";
 import { SRDashboard } from "./pages/servicerenderspages/dashboard";
+import { SrPayment } from "./pages/servicerenderspages/payment";
 
 function App() {
   return (
@@ -64,10 +65,34 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <MyDrawer
-              navRoutes={serviceRendersRoutesDashboard}
-              children={<SRDashboard />}
-            />
+            <Protected>
+              <MyDrawer
+                navRoutes={serviceRendersRoutesDashboard}
+                children={<SRDashboard />}
+              />
+            </Protected>
+          }
+        />
+        <Route
+          path="/payment"
+          element={
+            <Protected>
+              <MyDrawer
+                navRoutes={serviceRendersRoutesDashboard}
+                children={<SrPayment />}
+              />
+            </Protected>
+          }
+        />
+        <Route
+          path="/manageservices"
+          element={
+            <Protected>
+              <MyDrawer
+                navRoutes={serviceRendersRoutesDashboard}
+                children={<ServiceRendering />}
+              />
+            </Protected>
           }
         />
         <Route

@@ -270,18 +270,18 @@ const ReactTable = () => {
           </Box>
         )}
         enableTopToolbar
-        renderTopToolbarCustomActions={() => (
-          <Button
-            color="secondary"
-            onClick={() => setCreateModalOpen(true)}
-            variant="contained"
-            disableElevation
-            endIcon={<PersonAddAlt1 />}
-            sx={{ m: 1 }}
-          >
-            Add User
-          </Button>
-        )}
+        // renderTopToolbarCustomActions={() => (
+        //   <Button
+        //     color="secondary"
+        //     onClick={() => setCreateModalOpen(true)}
+        //     variant="contained"
+        //     disableElevation
+        //     endIcon={<PersonAddAlt1 />}
+        //     sx={{ m: 1 }}
+        //   >
+        //     Add User
+        //   </Button>
+        // )}
       />
       <CreateNewAccountModal
         columns={columns}

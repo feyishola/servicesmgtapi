@@ -2,8 +2,6 @@ import React from "react";
 import { Card, CardContent, Typography, Box, Divider } from "@mui/material";
 import Icon from "@mui/material/Icon";
 import HomeIcon from "@mui/icons-material/Home";
-import WeekendIcon from "@mui/icons-material/Weekend";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const StatsCard = ({ icon, title, description, stat, statColor }) => {
   return (
@@ -55,12 +53,10 @@ export function ComplexStatisticsCard({
           {/* <Icon fontSize="medium" color="inherit">
             {icon}
           </Icon> */}
-          {icon === "weekend" && (
-            <WeekendIcon fontSize="medium" style={{ color: "white" }} />
-          )}
-          {icon === "content_copy" && (
+          {icon}
+          {/* {icon === "content_copy" && (
             <ContentCopyIcon fontSize="medium" style={{ color: "white" }} />
-          )}
+          )} */}
         </Box>
         <Box textAlign="right" lineHeight={1.25}>
           <Typography variant="button" fontWeight="light" color="text">

@@ -35,6 +35,7 @@ import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import ScheduleIcon from "@mui/icons-material/Schedule";
 
 // Material Dashboard 2 React components
 // import MDBox from "components/MDBox";
@@ -100,7 +101,7 @@ function ReportsBarChart({ color, title, description, date, chart, bgColor }) {
               sx={{ mt: 0.15, mr: 0.5 }}
             >
               {/* <Icon>schedule</Icon> */}
-              {<ContentCopyIcon fontSize="medium" style={{ color: "white" }} />}
+              {<ContentCopyIcon fontSize="medium" style={{ color: "black" }} />}
             </Typography>
             <Typography variant="button" color="text" fontWeight="light">
               {date}
