@@ -13,100 +13,103 @@ import MyDrawer from "./components/drawer";
 import { serviceRendersRoutesDashboard } from "./routes/routes";
 import { SRDashboard } from "./pages/servicerenderspages/dashboard";
 import { SrPayment } from "./pages/servicerenderspages/payment";
+import { SocketProvider } from "./utils/socketcontext";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
+      <SocketProvider>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
 
-        <Route
-          path="/login"
-          element={
-            <Layout name={"Login Page"}>
-              <LoginPage />
-            </Layout>
-          }
-        />
+          <Route
+            path="/login"
+            element={
+              <Layout name={"Login Page"}>
+                <LoginPage />
+              </Layout>
+            }
+          />
 
-        <Route
-          path="/serviceapp"
-          element={
-            <Protected>
-              <ServiceRendering />
-            </Protected>
-          }
-        />
+          <Route
+            path="/serviceapp"
+            element={
+              <Protected>
+                <ServiceRendering />
+              </Protected>
+            }
+          />
 
-        <Route
-          path="/renderreg"
-          element={
-            <Layout name={"Registration Page"}>
-              <SrRegistrationPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/consumerreg"
-          element={
-            <Layout name={"Registration Page"}>
-              <ConsumerRegistrationPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/regpage"
-          element={
-            <Layout name={"Choose Registration Form"} info={""}>
-              <LinksToRegPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <Protected>
-              <MyDrawer
-                navRoutes={serviceRendersRoutesDashboard}
-                children={<SRDashboard />}
-              />
-            </Protected>
-          }
-        />
-        <Route
-          path="/payment"
-          element={
-            <Protected>
-              <MyDrawer
-                navRoutes={serviceRendersRoutesDashboard}
-                children={<SrPayment />}
-              />
-            </Protected>
-          }
-        />
-        <Route
-          path="/manageservices"
-          element={
-            <Protected>
-              <MyDrawer
-                navRoutes={serviceRendersRoutesDashboard}
-                children={<ServiceRendering />}
-              />
-            </Protected>
-          }
-        />
-        <Route
-          path="*"
-          element={
-            <Layout
-              name={"Page Not Found"}
-              info={"Page has either been moved or does not exist."}
-            >
-              <PageNotFound />
-            </Layout>
-          }
-        />
-      </Routes>
+          <Route
+            path="/renderreg"
+            element={
+              <Layout name={"Registration Page"}>
+                <SrRegistrationPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/consumerreg"
+            element={
+              <Layout name={"Registration Page"}>
+                <ConsumerRegistrationPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/regpage"
+            element={
+              <Layout name={"Choose Registration Form"} info={""}>
+                <LinksToRegPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <Protected>
+                <MyDrawer
+                  navRoutes={serviceRendersRoutesDashboard}
+                  children={<SRDashboard />}
+                />
+              </Protected>
+            }
+          />
+          <Route
+            path="/payment"
+            element={
+              <Protected>
+                <MyDrawer
+                  navRoutes={serviceRendersRoutesDashboard}
+                  children={<SrPayment />}
+                />
+              </Protected>
+            }
+          />
+          <Route
+            path="/manageservices"
+            element={
+              <Protected>
+                <MyDrawer
+                  navRoutes={serviceRendersRoutesDashboard}
+                  children={<ServiceRendering />}
+                />
+              </Protected>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Layout
+                name={"Page Not Found"}
+                info={"Page has either been moved or does not exist."}
+              >
+                <PageNotFound />
+              </Layout>
+            }
+          />
+        </Routes>
+      </SocketProvider>
     </BrowserRouter>
   );
 }

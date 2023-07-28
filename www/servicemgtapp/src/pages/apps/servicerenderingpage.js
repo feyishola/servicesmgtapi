@@ -290,6 +290,9 @@ function ServiceRendering() {
                   <h2>Name: {selectedMarker.serviceRendererName}</h2>
                   <p>Services: {selectedMarker.services}</p>
                   <p>Phone number: {selectedMarker.phoneNumber}</p>
+                  <Button onClick={() => console.log("clicked")}>
+                    click me
+                  </Button>
                 </div>
               </Popup>
             )}

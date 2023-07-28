@@ -1,21 +1,47 @@
 import { Box, Grid } from "@mui/material";
-import React from "react";
-import StatsCard, { ComplexStatisticsCard } from "../../components/statscard"; // Make sure to provide the correct path to StatsCard component
-import ChartCard from "../../components/chartcard"; // Make sure to provide the correct path to ChartCard component
-import HomeIcon from "@mui/icons-material/Home";
+import React, { useContext, useEffect, useState } from "react";
+import { ComplexStatisticsCard } from "../../components/statscard"; // Make sure to provide the correct path to StatsCard component
 import ReportsBarChart from "../../components/ReportsBarChart";
 import reportsBarChartData from "../../components/ReportsBarChart/reportsBarChartData";
 import ReportsLineChart from "../../components/LineCharts/ReportsLineChart";
 import reportsLineChartData from "../../components/LineCharts/ReportsLineChart/reportsLineChartData";
 import GradeIcon from "@mui/icons-material/Grade";
 import WeekendIcon from "@mui/icons-material/Weekend";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import HailIcon from "@mui/icons-material/Hail";
 import EmailIcon from "@mui/icons-material/Email";
 import ReactTable from "../../components/table/table";
+import { SocketContext } from "../../utils/socketcontext";
 
 export const SRDashboard = () => {
+  const socket = useContext(SocketContext);
   const { sales, tasks } = reportsLineChartData;
+
+  const [ratings, setRatings] = useState(null);
+
+  socket.on("serverResponse", (res) => {
+    console.log({ res, test: "serv" });
+  });
+
+  socket.on("above", (res) => {
+    console.log({ res, above: "serv" });
+  });
+
+  socket.on("below", (res) => {
+    console.log({ res, below: "serv" });
+  });
+
+  socket.on("ratingsUpdate", (update) => {
+    setRatings(update);
+    console.log({ update });
+  });
+
+  const sendMsg = () => {
+    socket.emit("msgFromClient", { message: "testing socket" });
+  };
+
+  useEffect(() => {
+    sendMsg();
+  }, []);
   return (
     <Box sx={{ backgroundColor: "#f0f2f5", height: "100vh" }}>
       <Box mb={3} />
@@ -26,7 +52,7 @@ export const SRDashboard = () => {
             bgcolor={"#42424a"}
             icon={<WeekendIcon fontSize="medium" style={{ color: "white" }} />}
             title="Bookings"
-            count={281}
+            count={28}
             percentage={{
               color: "success",
               amount: "+55%",
@@ -40,7 +66,7 @@ export const SRDashboard = () => {
             bgcolor={"#49a3f1"}
             icon={<EmailIcon style={{ color: "white" }} />}
             title="Messages"
-            count={281}
+            count={9}
             percentage={{
               color: "success",
               amount: "+55%",
@@ -54,7 +80,7 @@ export const SRDashboard = () => {
             bgcolor={"#66BB6A"}
             icon={<HailIcon style={{ color: "white" }} />}
             title="Referrals"
-            count={281}
+            count={0}
             percentage={{
               color: "success",
               amount: "+55%",
@@ -68,7 +94,7 @@ export const SRDashboard = () => {
             bgcolor={"#EC407A"}
             icon={<GradeIcon style={{ color: "white" }} />}
             title="Ratings"
-            count={281}
+            count={ratings === null || ratings === undefined ? 0 : ratings}
             percentage={{
               color: "success",
               amount: "+55%",
