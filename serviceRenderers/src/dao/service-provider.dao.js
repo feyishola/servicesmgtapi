@@ -64,6 +64,14 @@ class ServiceProviderDao {
     return result;
   }
 
+  async patchUser(phoneNumber, ratings) {
+    const result = await renderModel.findOneAndUpdate(
+      { phoneNumber },
+      { $set: { ratings } }
+    );
+    return result;
+  }
+
   async updateServiceProvider(
     id,
     phoneNumber,

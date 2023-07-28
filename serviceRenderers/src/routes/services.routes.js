@@ -5,6 +5,10 @@ const jwt = require("jsonwebtoken");
 const geocoder = require("../utils/geocoder");
 const Authentication = require("../middleware/authentication");
 const Authorization = require("../middleware/authorization");
+const serviceProviderDao = require("../dao/service-provider.dao");
+const ratings = require("../utils/helperfuctions");
+// const io = require("../app");
+// const { getIoInstance } = require("../utils/socketinstance");
 
 const { Router } = express;
 
@@ -13,7 +17,7 @@ module.exports = () => {
 
   api.get(
     "/",
-    [Authentication, Authorization(["consumer"])],
+    [Authentication, Authorization(["serviceProvider"])],
     async (req, res) => {
       try {
         let result = await ServiceProviderDao.getAllServiceProviders();
@@ -167,6 +171,45 @@ module.exports = () => {
         newPassword
       );
       res.status(200).json({ response: true, payload: "file updated" });
+    } catch (error) {
+      res.status(400).json({ response: false, payload: error.message });
+    }
+  });
+
+  api.patch("/ratings", async (req, res) => {
+    const {
+      phoneNumber,
+      timeliness,
+      communication,
+      valueForMoney,
+      customerService,
+      professionalism,
+    } = req.body;
+
+    try {
+      const render = await serviceProviderDao.getUser(phoneNumber);
+
+      if (render) {
+        let response = ratings(
+          timeliness,
+          communication,
+          valueForMoney,
+          customerService,
+          professionalism
+        );
+        // render.ratings = response;
+        let result = await serviceProviderDao.patchUser(phoneNumber, response);
+
+        //Emit the updated ratings value to all connected clients using Socket.IO
+        // req.io.emit("ratingsUpdate", response);
+        // const io = getIoInstance();
+
+        require("../server").emitEvent("ratingsUpdate", response);
+
+        // io.emit("ratingsUpdate", response);
+
+        res.status(200).json({ response: true, payload: result });
+      }
     } catch (error) {
       res.status(400).json({ response: false, payload: error.message });
     }
