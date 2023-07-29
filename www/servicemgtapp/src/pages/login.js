@@ -15,9 +15,10 @@ const LoginPage = () => {
       const res = await postRequest("/services/login", formData);
 
       if (res) {
-        const { token } = res;
+        const { token, user } = res;
         localStorage.clear();
         localStorage.setItem("token", JSON.stringify(token));
+        localStorage.setItem("id", JSON.stringify(user._id));
         setTimeout(() => {
           //Dashboard
           navigate("/dashboard");

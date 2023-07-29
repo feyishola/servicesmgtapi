@@ -3,7 +3,7 @@ const { fectchApi } = require("./fetch");
 
 export const getRequest = async (api, token) => {
   const response = await fectchApi(env.baseUrl + `${api}`, "GET", null, token);
-  console.log(response);
+  return response;
 };
 
 export const postRequest = async (api, payload) => {

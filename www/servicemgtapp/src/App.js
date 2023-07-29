@@ -14,6 +14,7 @@ import { serviceRendersRoutesDashboard } from "./routes/routes";
 import { SRDashboard } from "./pages/servicerenderspages/dashboard";
 import { SrPayment } from "./pages/servicerenderspages/payment";
 import { SocketProvider } from "./utils/socketcontext";
+import { ChatPage } from "./pages/chat";
 
 function App() {
   return (
@@ -82,6 +83,17 @@ function App() {
                 <MyDrawer
                   navRoutes={serviceRendersRoutesDashboard}
                   children={<SrPayment />}
+                />
+              </Protected>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <Protected>
+                <MyDrawer
+                  navRoutes={serviceRendersRoutesDashboard}
+                  children={<ChatPage />}
                 />
               </Protected>
             }

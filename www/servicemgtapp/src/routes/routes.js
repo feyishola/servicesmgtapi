@@ -12,6 +12,8 @@ import WalletIcon from "@mui/icons-material/Wallet";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import HelpIcon from "@mui/icons-material/Help";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
+import ChatIcon from "@mui/icons-material/Chat";
+import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 
 export const privateRoutes = [
   {
@@ -59,9 +61,9 @@ export const serviceRendersRoutesDashboard = [
     to: "/payment",
   },
   {
-    name: "Alerts",
-    icon: <NotificationsIcon />,
-    to: "/alert",
+    name: "Chat",
+    icon: <ChatIcon />,
+    to: "/chat",
   },
 
   {
@@ -70,13 +72,13 @@ export const serviceRendersRoutesDashboard = [
     to: "/manageservices",
   },
   {
+    name: "Profile",
+    icon: <PermIdentityIcon />,
+    to: "/profile",
+  },
+  {
     name: "Settings",
     icon: <SettingsIcon />,
     to: "/setting",
-  },
-  {
-    name: "Support Center",
-    icon: <HelpIcon />,
-    to: "/supportcenter",
   },
 ];

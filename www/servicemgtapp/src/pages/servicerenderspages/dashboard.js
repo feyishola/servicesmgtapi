@@ -11,6 +11,7 @@ import HailIcon from "@mui/icons-material/Hail";
 import EmailIcon from "@mui/icons-material/Email";
 import ReactTable from "../../components/table/table";
 import { SocketContext } from "../../utils/socketcontext";
+import { getRequest } from "../../utils/apicalls";
 
 export const SRDashboard = () => {
   const socket = useContext(SocketContext);
@@ -18,29 +19,23 @@ export const SRDashboard = () => {
 
   const [ratings, setRatings] = useState(null);
 
-  socket.on("serverResponse", (res) => {
-    console.log({ res, test: "serv" });
-  });
-
-  socket.on("above", (res) => {
-    console.log({ res, above: "serv" });
-  });
-
-  socket.on("below", (res) => {
-    console.log({ res, below: "serv" });
-  });
-
   socket.on("ratingsUpdate", (update) => {
     setRatings(update);
     console.log({ update });
   });
 
-  const sendMsg = () => {
-    socket.emit("msgFromClient", { message: "testing socket" });
+  const getRatings = async () => {
+    const id = localStorage.getItem("id");
+    const num = id.replace(/['"]/g, "");
+
+    const res = await getRequest(`/services/${num}`);
+    if (res) {
+      setRatings(res.ratings);
+    }
   };
 
   useEffect(() => {
-    sendMsg();
+    getRatings();
   }, []);
   return (
     <Box sx={{ backgroundColor: "#f0f2f5", height: "100vh" }}>
