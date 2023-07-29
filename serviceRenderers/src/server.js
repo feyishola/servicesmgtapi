@@ -30,14 +30,16 @@ class AppServer {
     this.#io.on("connection", (socket) => {
       console.log("connected to socket.io");
 
+      // Sending socket id to client
+      socket.emit("socketId", socket.id);
+
       // listening for event
 
       socket.on("msgFromClient", (message) => {
-        console.log(`received client message: ${message}`);
-
+        console.log("received from client", message);
         // brodcast from io to clients
 
-        this.#io.emit("serverResponse", { data: "ur data from server" });
+        this.#io.emit("serverResponse", message);
       });
 
       socket.on("disconnect", () => {

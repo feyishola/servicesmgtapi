@@ -198,7 +198,7 @@ module.exports = () => {
           professionalism
         );
         // render.ratings = response;
-        let result = await serviceProviderDao.patchUser(phoneNumber, response);
+        let result = await serviceProviderDao.rateUser(phoneNumber, response);
 
         //Emit the updated ratings value to all connected clients using Socket.IO
         // req.io.emit("ratingsUpdate", response);

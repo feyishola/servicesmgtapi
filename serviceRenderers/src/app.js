@@ -1,10 +1,6 @@
 require("dotenv").config({ path: "../.env" });
 const server = require("./server");
 
-setTimeout(() => {
-  server.emitEvent("above", "testing from server");
-}, 10000);
-
 // const express = require("express");
 // require("./connection/mongodb.conn")();
 // const routes = require("./routes/services.routes")();
