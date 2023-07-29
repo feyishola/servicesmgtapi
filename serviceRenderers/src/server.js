@@ -36,7 +36,7 @@ class AppServer {
       // listening for event
 
       socket.on("msgFromClient", (message) => {
-        console.log("received from client", message);
+        // console.log("received from client", message);
         // brodcast from io to clients
 
         this.#io.emit("serverResponse", message);
