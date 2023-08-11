@@ -35,11 +35,15 @@ class AppServer {
 
       // listening for event
 
-      socket.on("msgFromClient", (message) => {
+      socket.on("msgFromClient", (room, message) => {
         // console.log("received from client", message);
         // brodcast from io to clients
-
-        this.#io.emit("serverResponse", message);
+        console.log({ room });
+        if (room) {
+          socket.to(room).emit("serverResponse", message);
+        } else {
+          socket.broadcast.emit("serverResponse", message);
+        }
       });
 
       socket.on("disconnect", () => {
