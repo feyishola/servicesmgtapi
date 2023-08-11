@@ -10,9 +10,7 @@ const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     const newSocket = io("http://127.0.0.1:5000"); // Server Url goes here
-
     setSocket(newSocket);
-
     return () => newSocket.close();
   }, []);
 

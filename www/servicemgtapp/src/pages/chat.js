@@ -1,10 +1,10 @@
 import { Box, Button, TextField } from "@mui/material";
 import React, { useState, useContext, useRef, useEffect } from "react";
-import { SocketContext } from "../utils/socketcontext";
+// import { SocketContext } from "../utils/socketcontext";
 import io from "socket.io-client";
 
 export const ChatPage = () => {
-  const socket = useContext(SocketContext);
+  // const socket = useContext(SocketContext);  // Dis cant be used here cus useContext cant b used in useEffect
 
   const socketRef = useRef();
   //   socketRef.current = socket;
@@ -12,26 +12,37 @@ export const ChatPage = () => {
   const [msg, setMsg] = useState("");
   const [yourID, setYourID] = useState();
   const [messages, setMessages] = useState([]);
+  const [room, setRoom] = useState();
 
   useEffect(() => {
-    socketRef.current = io.connect("http://127.0.0.1:5000");
-
+    socketRef.current = io("http://127.0.0.1:5000");
     socketRef.current.on("socketId", (id) => {
+      console.log({ id });
       setYourID(id);
     });
 
+    // socketRef.current.on("receiver'sAddress", (room) => {
+    //   setRoom(room);
+    // });
+
     socketRef.current.on("serverResponse", (res) => {
+      console.log({ res });
       receivedMessage(res);
     });
   }, []);
 
   function receivedMessage(message) {
+    console.log(messages);
     setMessages((oldMsgs) => [...oldMsgs, message]);
   }
 
   function sendMsg() {
     setMsg("");
-    socket.emit("msgFromClient", { id: yourID, body: msg });
+    if (!room) {
+      socketRef.current.emit("msgFromClient", "", { id: yourID, body: msg });
+    } else {
+      socketRef.current.emit("msgFromClient", room, { id: yourID, body: msg });
+    }
   }
 
   return (
@@ -45,6 +56,7 @@ export const ChatPage = () => {
         alignItems: "center",
       }}
     >
+      {yourID && `your id: ${yourID}`}
       <Box
         sx={{
           display: "flex",
@@ -148,6 +160,22 @@ export const ChatPage = () => {
             "& fieldset": { border: "none" },
           }}
           onChange={(e) => setMsg(e.target.value)}
+        />
+        <TextField
+          fullWidth
+          value={room}
+          placeholder="id"
+          sx={{
+            outlineStyle: "none",
+            fontSize: "17px",
+            outline: "none",
+            color: "lightgray",
+            letterSpacing: "1px",
+            lineHeight: "20px",
+            border: "none",
+            "& fieldset": { border: "none" },
+          }}
+          onChange={(e) => setRoom(e.target.value)}
         />
       </Box>
       <Button

@@ -1,6 +1,6 @@
 // import "../App.css";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
 import ReactMapGl, { Marker, Popup } from "react-map-gl";
 import { env } from "../../config";
 import { fectchApi } from "../../utils/fetch";
@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { postRequest } from "../../utils/apicalls";
+// import { SocketContext } from "../../utils/socketcontext";
 
 function ServiceRendering() {
   const [viewport, setViewport] = useState({
@@ -33,6 +34,15 @@ function ServiceRendering() {
   const [formVal, setFormVal] = useState({});
 
   const [chooseAddress, setChooseAddress] = useState(false);
+
+  // const [Id, setId] = useState();
+
+  // const socket = useContext(SocketContext);
+
+  // socket.on("socketId", (id) => {
+  //   console.log({ id });
+  //   setId(id);
+  // });
 
   const handleMarkerClick = (marker) => {
     setSelectedMarker(marker);
