@@ -38,10 +38,15 @@ class AppServer {
       socket.on("msgFromClient", (room, message) => {
         // console.log("received from client", message);
         // brodcast from io to clients
-        console.log({ room });
+
         if (room) {
+          // let { id } = message;
+          // socket.join(id);
+          // console.log({ id });
           socket.to(room).emit("serverResponse", message);
+          socket.emit("myMsg", message);
         } else {
+          // console.log({ msgFromClient: message });
           socket.broadcast.emit("serverResponse", message);
         }
       });
