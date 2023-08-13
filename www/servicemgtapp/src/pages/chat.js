@@ -17,22 +17,23 @@ export const ChatPage = () => {
   useEffect(() => {
     socketRef.current = io("http://127.0.0.1:5000");
     socketRef.current.on("socketId", (id) => {
-      console.log({ id });
+      // console.log({ id });
       setYourID(id);
     });
 
-    // socketRef.current.on("receiver'sAddress", (room) => {
-    //   setRoom(room);
-    // });
-
     socketRef.current.on("serverResponse", (res) => {
-      console.log({ res });
+      // console.log({ res });
+      receivedMessage(res);
+    });
+
+    socketRef.current.on("myMsg", (res) => {
+      // console.log({ myMsg: res });
       receivedMessage(res);
     });
   }, []);
 
   function receivedMessage(message) {
-    console.log(messages);
+    console.log({ messages });
     setMessages((oldMsgs) => [...oldMsgs, message]);
   }
 
