@@ -4,6 +4,8 @@ const http = require("http");
 const routes = require("./routes/services.routes")();
 const socketio = require("socket.io");
 const cors = require("cors");
+// const redis = require("redis");
+const redis_client = require("./connection/redis.conn")();
 
 class AppServer {
   #io;
@@ -11,7 +13,7 @@ class AppServer {
     this.#init();
   }
 
-  #init() {
+  async #init() {
     const app = express();
 
     app.use(express.urlencoded({ extended: true }));
@@ -22,6 +24,9 @@ class AppServer {
     this.#io = socketio(server, { cors: { allow: "*" } });
 
     const PORT = process.env.PORT || 5000;
+
+    const redisCli = await redis_client;
+    // const key = "id";
 
     server.listen(PORT, () => {
       console.log(`connected to ${PORT}`);
@@ -35,14 +40,41 @@ class AppServer {
 
       // listening for event
 
-      socket.on("msgFromClient", (room, message) => {
+      socket.on("forRedis", (user, id) => {
+        console.log(user, id);
+        redisCli.set(user, id, (err, res) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+      });
+
+      socket.on("user", async (user) => {
+        let res = await redisCli.get(user);
+        if (res != null || res != undefined) {
+          socket.emit("sockId", res);
+        }
+        // console.log({ res });
+      });
+
+      // socket.emit("sockId", "testing");
+
+      socket.on("msgFromClient", (room, message, id) => {
         // console.log("received from client", message);
         // brodcast from io to clients
 
         if (room) {
           // let { id } = message;
           // socket.join(id);
-          // console.log({ id });
+
+          redisCli.set(id, room, (err, res) => {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log(res);
+            }
+          });
+
           socket.to(room).emit("serverResponse", message);
           socket.emit("myMsg", message);
         } else {
