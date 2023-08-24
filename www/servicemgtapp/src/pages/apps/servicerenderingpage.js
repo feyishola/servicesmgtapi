@@ -3,6 +3,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { React, useState, useEffect, useContext } from "react";
 import ReactMapGl, { Marker, Popup } from "react-map-gl";
 import { env } from "../../config";
+import { SocketContext } from "../../utils/socketcontext";
 import { fectchApi } from "../../utils/fetch";
 // import "./landingpage.css";
 import {
@@ -34,6 +35,19 @@ function ServiceRendering() {
   const [formVal, setFormVal] = useState({});
 
   const [chooseAddress, setChooseAddress] = useState(false);
+
+  const { socket, id } = useContext(SocketContext);
+
+  const { sockId, setSockId } = useState();
+
+  socket.on("sockId", (res) => {
+    console.log(res);
+    // setSockId(res);
+  });
+
+  console.log({ teesting: id });
+
+  // const [idx, setId] = useState(id);
 
   // const [Id, setId] = useState();
 
@@ -109,6 +123,11 @@ function ServiceRendering() {
 
   useEffect(() => {
     getCurrentLocation();
+    // const sockettRef = io("http://localhost:5000");
+    // sockettRef.on("socketId", (id) => {
+    //   setId(id);
+    //   // console.log({ testId: id });
+    // });
 
     // This is supposed to get current location and set it as the viewport
     // navigator.geolocation.getCurrentPosition((pos) => {
@@ -300,7 +319,15 @@ function ServiceRendering() {
                   <h2>Name: {selectedMarker.serviceRendererName}</h2>
                   <p>Services: {selectedMarker.services}</p>
                   <p>Phone number: {selectedMarker.phoneNumber}</p>
-                  <Button onClick={() => console.log("clicked")}>
+                  {sockId && <p>socket id: {sockId}</p>}
+                  <Button
+                    onClick={() => {
+                      // redis get key
+                      socket.emit("user", selectedMarker.phoneNumber);
+                      // console.log(selectedMarker.phoneNumber);
+                      // console.log(sockId);
+                    }}
+                  >
                     click me
                   </Button>
                 </div>

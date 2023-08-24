@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { postRequest } from "../utils/apicalls";
+import { SocketContext } from "../utils/socketcontext";
+// import io from "socket.io-client";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState();
+  // const [id, setId] = useState();
+  // const [user, setUser] = useState();
   const navigate = useNavigate();
+  // let socket;
+  const { socket, id } = useContext(SocketContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,8 +25,13 @@ const LoginPage = () => {
         localStorage.clear();
         localStorage.setItem("token", JSON.stringify(token));
         localStorage.setItem("id", JSON.stringify(user._id));
+        localStorage.setItem("phoneId", JSON.stringify(user.phoneNumber));
+        // localStorage.setItem(user.phoneNumber, id);
+        // setUser(user.phoneNumber);
+        socket.emit("forRedis", user.phoneNumber, id);
         setTimeout(() => {
           //Dashboard
+
           navigate("/dashboard");
         }, 1000);
       }
@@ -28,6 +39,17 @@ const LoginPage = () => {
       setError(error);
     }
   };
+
+  // useEffect(() => {
+  //   // socket.on("socketId", (id) => {
+  //   //   setId(id);
+  //   // });
+  //   socket = io("http://localhost:5000");
+  //   socket.on("socketId", (id) => {
+  //     setId(id);
+  //   });
+  //   socket.emit("forRedis", user, id);
+  // }, [user]);
 
   return (
     <Box

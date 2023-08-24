@@ -1,36 +1,46 @@
 import { Box, Button, TextField } from "@mui/material";
 import React, { useState, useContext, useRef, useEffect } from "react";
-// import { SocketContext } from "../utils/socketcontext";
-import io from "socket.io-client";
+import { SocketContext } from "../utils/socketcontext";
+// import io from "socket.io-client";
 
 export const ChatPage = () => {
-  // const socket = useContext(SocketContext);  // Dis cant be used here cus useContext cant b used in useEffect
+  const { socket, id } = useContext(SocketContext); // Dis cant be used here cus useContext cant b used in useEffect
 
-  const socketRef = useRef();
+  // const socketRef = useRef();
   //   socketRef.current = socket;
 
   const [msg, setMsg] = useState("");
-  const [yourID, setYourID] = useState();
+  const [yourID, setYourID] = useState(id);
   const [messages, setMessages] = useState([]);
   const [room, setRoom] = useState();
 
-  useEffect(() => {
-    socketRef.current = io("http://127.0.0.1:5000");
-    socketRef.current.on("socketId", (id) => {
-      // console.log({ id });
-      setYourID(id);
-    });
+  socket.on("serverResponse", (res) => {
+    // console.log({ res });
+    receivedMessage(res);
+  });
 
-    socketRef.current.on("serverResponse", (res) => {
-      // console.log({ res });
-      receivedMessage(res);
-    });
+  socket.on("myMsg", (res) => {
+    // console.log({ myMsg: res });
+    receivedMessage(res);
+  });
 
-    socketRef.current.on("myMsg", (res) => {
-      // console.log({ myMsg: res });
-      receivedMessage(res);
-    });
-  }, []);
+  // useEffect(() => {
+  // socketRef.current = io("http://127.0.0.1:5000");
+  // socketRef.current.on("socketId", (id) => {
+  //   // console.log({ id });
+  //   setYourID(id);
+  // });
+
+  // socketRef.current.on("serverResponse", (res) => {
+  //   // console.log({ res });
+  //   receivedMessage(res);
+  // });
+
+  // socketRef.current.on("myMsg", (res) => {
+  //   // console.log({ myMsg: res });
+  //   receivedMessage(res);
+  // });
+  // }, []);
 
   function receivedMessage(message) {
     console.log({ messages });
@@ -38,11 +48,16 @@ export const ChatPage = () => {
   }
 
   function sendMsg() {
+    const phone = localStorage.getItem("phoneId");
+    console.log({ phone });
     setMsg("");
     if (!room) {
-      socketRef.current.emit("msgFromClient", "", { id: yourID, body: msg });
+      socket.emit("msgFromClient", "", {
+        id: yourID,
+        body: msg,
+      });
     } else {
-      socketRef.current.emit("msgFromClient", room, { id: yourID, body: msg });
+      socket.emit("msgFromClient", room, { id: yourID, body: msg }, phone);
     }
   }
 

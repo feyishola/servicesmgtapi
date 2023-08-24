@@ -14,7 +14,7 @@ import { SocketContext } from "../../utils/socketcontext";
 import { getRequest } from "../../utils/apicalls";
 
 export const SRDashboard = () => {
-  const socket = useContext(SocketContext);
+  const { socket, id } = useContext(SocketContext);
   const { sales, tasks } = reportsLineChartData;
 
   const [ratings, setRatings] = useState(null);
