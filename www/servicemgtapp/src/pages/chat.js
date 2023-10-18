@@ -4,7 +4,9 @@ import { SocketContext } from "../utils/socketcontext";
 // import io from "socket.io-client";
 
 export const ChatPage = () => {
-  const { socket, id } = useContext(SocketContext); // Dis cant be used here cus useContext cant b used in useEffect
+  const { socket, id, recipient } = useContext(SocketContext); // Dis cant be used here cus useContext cant b used in useEffect
+
+  // recipient has been set in the servicerenderingpage
 
   // const socketRef = useRef();
   //   socketRef.current = socket;
@@ -13,9 +15,11 @@ export const ChatPage = () => {
   const [yourID, setYourID] = useState(id);
   const [messages, setMessages] = useState([]);
   const [room, setRoom] = useState();
+  const [resmsg, setresmsg] = useState();
 
   socket.on("serverResponse", (res) => {
-    // console.log({ res });
+    console.log({ tesingphase: res });
+    setresmsg(res);
     receivedMessage(res);
   });
 
@@ -49,16 +53,34 @@ export const ChatPage = () => {
 
   function sendMsg() {
     const phone = localStorage.getItem("phoneId");
-    console.log({ phone });
+    // console.log({ recipient, yourID });
     setMsg("");
-    if (!room) {
-      socket.emit("msgFromClient", "", {
-        id: yourID,
-        body: msg,
-      });
+    if (recipient) {
+      console.log({ yourID, recipient, msg });
+      socket.emit(
+        "msgFromClient",
+        { mySockId: yourID, recipientSockId: recipient, body: msg },
+        phone
+      );
     } else {
-      socket.emit("msgFromClient", room, { id: yourID, body: msg }, phone);
+      console.log({ yourID, recipient: resmsg.mySockId, msg });
+      socket.emit(
+        "msgFromClient",
+        { mySockId: yourID, recipientSockId: resmsg.mySockId, body: msg },
+        phone
+      );
     }
+
+    // if (!recipient || recipient == null || recipient == undefined) {
+    //   console.log("here");
+    //   socket.emit("msgToClient", {
+    //     id: yourID,
+    //     body: msg,
+    //   });
+    // } else {
+    //   console.log({ recipient });
+    //   socket.emit("msgFromClient", recipient, { id: yourID, body: msg }, phone);
+    // }
   }
 
   return (
@@ -177,7 +199,7 @@ export const ChatPage = () => {
           }}
           onChange={(e) => setMsg(e.target.value)}
         />
-        <TextField
+        {/* <TextField
           fullWidth
           value={room}
           placeholder="id"
@@ -192,7 +214,7 @@ export const ChatPage = () => {
             "& fieldset": { border: "none" },
           }}
           onChange={(e) => setRoom(e.target.value)}
-        />
+        /> */}
       </Box>
       <Button
         sx={{

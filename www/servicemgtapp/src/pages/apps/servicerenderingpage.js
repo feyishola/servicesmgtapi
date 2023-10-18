@@ -4,6 +4,7 @@ import { React, useState, useEffect, useContext } from "react";
 import ReactMapGl, { Marker, Popup } from "react-map-gl";
 import { env } from "../../config";
 import { SocketContext } from "../../utils/socketcontext";
+import { useNavigate } from "react-router-dom";
 import { fectchApi } from "../../utils/fetch";
 // import "./landingpage.css";
 import {
@@ -36,16 +37,18 @@ function ServiceRendering() {
 
   const [chooseAddress, setChooseAddress] = useState(false);
 
-  const { socket, id } = useContext(SocketContext);
+  const { socket, id, setRecipient } = useContext(SocketContext);
 
-  const { sockId, setSockId } = useState();
+  const [sockId, setSockId] = useState();
+
+  const [chatIcon, setChatIcon] = useState(false);
+
+  const navigate = useNavigate();
 
   socket.on("sockId", (res) => {
     console.log(res);
-    // setSockId(res);
+    setSockId(res);
   });
-
-  console.log({ teesting: id });
 
   // const [idx, setId] = useState(id);
 
@@ -319,17 +322,28 @@ function ServiceRendering() {
                   <h2>Name: {selectedMarker.serviceRendererName}</h2>
                   <p>Services: {selectedMarker.services}</p>
                   <p>Phone number: {selectedMarker.phoneNumber}</p>
-                  {sockId && <p>socket id: {sockId}</p>}
-                  <Button
-                    onClick={() => {
-                      // redis get key
-                      socket.emit("user", selectedMarker.phoneNumber);
-                      // console.log(selectedMarker.phoneNumber);
-                      // console.log(sockId);
-                    }}
-                  >
-                    click me
-                  </Button>
+                  <Box>
+                    <Button
+                      onClick={() => {
+                        // redis get key
+                        socket.emit("user", selectedMarker.phoneNumber);
+                        // console.log(selectedMarker.phoneNumber);
+                        // console.log(sockId);
+                        if (sockId) {
+                          // setChatIcon(true);
+                          setRecipient(sockId);
+                          // socket.emit(
+                          //   "senderSockId",
+                          //   localStorage.getItem("socketIdn")
+                          // );
+                          navigate("/chat");
+                        }
+                        // alert("recipient is offline!");
+                      }}
+                    >
+                      Double click to chat
+                    </Button>
+                  </Box>
                 </div>
               </Popup>
             )}

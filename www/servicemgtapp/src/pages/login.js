@@ -26,6 +26,7 @@ const LoginPage = () => {
         localStorage.setItem("token", JSON.stringify(token));
         localStorage.setItem("id", JSON.stringify(user._id));
         localStorage.setItem("phoneId", JSON.stringify(user.phoneNumber));
+        localStorage.setItem("socketIdn", JSON.stringify(id));
         // localStorage.setItem(user.phoneNumber, id);
         // setUser(user.phoneNumber);
         socket.emit("forRedis", user.phoneNumber, id);

@@ -8,6 +8,7 @@ const SocketContext = createContext();
 const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [id, setId] = useState();
+  const [recipient, setRecipient] = useState();
 
   useEffect(() => {
     const newSocket = io("http://127.0.0.1:5000"); // Server Url goes here
@@ -19,7 +20,7 @@ const SocketProvider = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, id }}>
+    <SocketContext.Provider value={{ socket, id, setRecipient, recipient }}>
       {children}
     </SocketContext.Provider>
   );
