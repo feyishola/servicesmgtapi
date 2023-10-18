@@ -39,7 +39,7 @@ class AppServer {
       socket.emit("socketId", socket.id);
 
       // listening for event
-
+      // setting the redisdb with phonenumber as key and socketid as value from login page
       socket.on("forRedis", (user, id) => {
         console.log(user, id);
         redisCli.set(user, id, (err, res) => {
@@ -49,6 +49,7 @@ class AppServer {
         });
       });
 
+      // using user(phone number) frm servicerenderingpage to search the redisdb for socketid
       socket.on("user", async (user) => {
         let res = await redisCli.get(user);
         if (res != null || res != undefined) {
@@ -56,31 +57,53 @@ class AppServer {
         }
         // console.log({ res });
       });
+      //test
+      // socket.on("senderSockId", (res) => console.log({ sendersid: res }));
 
-      // socket.emit("sockId", "testing");
+      socket.on("messageToClient", () => {});
 
-      socket.on("msgFromClient", (room, message, id) => {
+      socket.on("msgFromClient", async (message, phone) => {
         // console.log("received from client", message);
         // brodcast from io to clients
 
-        if (room) {
-          // let { id } = message;
-          // socket.join(id);
+        let { mySockId, recipientSockId, body } = message;
 
-          redisCli.set(id, room, (err, res) => {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log(res);
-            }
-          });
-
-          socket.to(room).emit("serverResponse", message);
+        if (recipientSockId) {
+          socket.to(recipientSockId).emit("serverResponse", message);
+          // socket.to(id).emit("serverResponse", message);
           socket.emit("myMsg", message);
         } else {
-          // console.log({ msgFromClient: message });
-          socket.broadcast.emit("serverResponse", message);
+          let recipientSockId2 = await redisCli.get(phone);
+
+          console.log({ recipientSockId2 });
+
+          //   redisCli.set(phone, recipient, (err, res) => {
+          //   if (err) {
+          //     console.log(err);
+          //   } else {
+          //     console.log(res);
+          //   }
+          // });
         }
+        // } else if (id) {
+        // console.log({ else: id });
+        // // socket.join(id);
+
+        // redisCli.set(phone, room, (err, res) => {
+        //   if (err) {
+        //     console.log(err);
+        //   } else {
+        //     console.log(res);
+        //   }
+        // });
+
+        // // socket.to(room).emit("serverResponse", message);
+        // socket.to(id).emit("serverResponse", message);
+        // socket.emit("myMsg", message);
+        // } else {
+        // console.log({ msgFromClient: message });
+        // socket.broadcast.emit("serverResponse", message);
+        // }
       });
 
       socket.on("disconnect", () => {
