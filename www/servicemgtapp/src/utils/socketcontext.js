@@ -11,7 +11,8 @@ const SocketProvider = ({ children }) => {
   const [recipient, setRecipient] = useState();
 
   useEffect(() => {
-    const newSocket = io("http://127.0.0.1:5000"); // Server Url goes here
+    // const newSocket = io("http://127.0.0.1:5000");
+    const newSocket = io("https://sample-project-kntm.onrender.com:5000"); // Server Url goes here
     setSocket(newSocket);
     newSocket.on("socketId", (id) => {
       setId(id);
