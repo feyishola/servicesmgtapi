@@ -264,7 +264,7 @@ function ServiceRendering() {
         <Grid item xl={9} lg={12}>
           <ReactMapGl
             {...viewport}
-            mapboxAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+            mapboxAccessToken={env.REACT_APP_MAPBOX_TOKEN}
             mapStyle="mapbox://styles/mapbox/streets-v9"
             style={{ width: "70vw", height: "70vh" }}
             onMove={(newViewport) => setViewport(newViewport.viewState)}
