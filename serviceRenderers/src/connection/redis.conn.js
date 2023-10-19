@@ -10,12 +10,14 @@ module.exports = async () => {
 
   await client.connect();
 
-  client.on("connected", (err) => {
+  // Test the connection
+
+  client.on("ready", () => {
     console.log("connected to redis successfully!");
   });
 
   client.on("error", (err) => {
-    console.log(err);
+    console.log("Redis connection error", err);
   });
 
   return client;
