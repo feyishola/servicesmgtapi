@@ -14,6 +14,7 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { postRequest } from "../../utils/apicalls";
 // import { SocketContext } from "../../utils/socketcontext";
@@ -41,7 +42,7 @@ function ServiceRendering() {
 
   const [sockId, setSockId] = useState();
 
-  const [chatIcon, setChatIcon] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -80,6 +81,7 @@ function ServiceRendering() {
   };
 
   const getServices = async () => {
+    setLoading(true);
     try {
       // const service = "hotel"; // service in search for
       // const lng = viewport.longitude; // your present location
@@ -106,6 +108,7 @@ function ServiceRendering() {
           //   formVal
           // );
           const response = await postRequest("/services/searchaddr", formVal);
+          setLoading(false);
           setSelectedServices(response);
         } else {
           // const response = await fectchApi(
@@ -114,6 +117,7 @@ function ServiceRendering() {
           //   formVal
           // );
           const response = await postRequest("/services/search", formVal);
+          setLoading(false);
           setSelectedServices(response);
           console.log({ selectedServices: response });
         }
@@ -175,92 +179,120 @@ function ServiceRendering() {
       }}
     >
       <Grid container spacing={1}>
-        <Grid
-          item
-          xl={3}
-          lg={12}
-          sx={{
-            display: "flex",
-            // flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            component={"form"}
+        {loading ? (
+          <Grid
+            item
+            xl={3}
+            lg={12}
             sx={{
-              "& > :not(style)": { m: 1, width: "40ch" },
               display: "flex",
-              flexDirection: "column",
+              // flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <TextField
-              id="service"
-              label="Service"
-              name="service"
-              variant="outlined"
-              size="small"
-              onChange={(e) =>
-                setFormVal({ ...formVal, [e.target.name]: e.target.value })
-              }
-            />
-            <TextField
-              id="distance"
-              label="Distance"
-              variant="outlined"
-              name="meters"
-              size="small"
-              InputProps={{
-                endAdornment: <InputAdornment position="end">m</InputAdornment>,
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
               }}
-              onChange={(e) =>
-                setFormVal({ ...formVal, [e.target.name]: e.target.value })
-              }
-            />
-
-            <TextField
-              id="currLoc"
-              label="Address"
-              variant="outlined"
-              name="address"
-              size="small"
-              // disabled
-              placeholder="Address should include state and country"
-              onChange={(e) => {
-                setFormVal({ ...formVal, [e.target.name]: e.target.value });
-                setChooseAddress(true);
-              }}
-            />
-            {!chooseAddress && (
-              <Button onClick={() => getCurrentLocation()}>Get Location</Button>
-            )}
-            <br />
-            <Button
-              variant="contained"
-              color="success"
+            >
+              <CircularProgress color="primary" size={60} sx={{ mb: 2 }} />
+            </Box>
+          </Grid>
+        ) : (
+          <Grid
+            item
+            xl={3}
+            lg={12}
+            sx={{
+              display: "flex",
+              // flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              component={"form"}
               sx={{
                 "& > :not(style)": { m: 1, width: "40ch" },
-              }}
-              onClick={() => {
-                // console.log(formVal);
-                getServices();
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              Search
-            </Button>
-            <Typography
-              variant="body2"
-              gutterBottom
-              sx={{ textAlign: "center" }}
-            >
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-              blanditiis tenetur unde suscipit, quam beatae rerum inventore
-              consectetur, neque doloribus,
-            </Typography>
-          </Box>
-        </Grid>
+              <TextField
+                id="service"
+                label="Service"
+                name="service"
+                variant="outlined"
+                size="small"
+                onChange={(e) =>
+                  setFormVal({ ...formVal, [e.target.name]: e.target.value })
+                }
+              />
+              <TextField
+                id="distance"
+                label="Distance"
+                variant="outlined"
+                name="meters"
+                size="small"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">m</InputAdornment>
+                  ),
+                }}
+                onChange={(e) =>
+                  setFormVal({ ...formVal, [e.target.name]: e.target.value })
+                }
+              />
+
+              <TextField
+                id="currLoc"
+                label="Address"
+                variant="outlined"
+                name="address"
+                size="small"
+                // disabled
+                placeholder="Address should include state and country"
+                onChange={(e) => {
+                  setFormVal({ ...formVal, [e.target.name]: e.target.value });
+                  setChooseAddress(true);
+                }}
+              />
+              {!chooseAddress && (
+                <Button onClick={() => getCurrentLocation()}>
+                  Get Location
+                </Button>
+              )}
+              <br />
+              <Button
+                variant="contained"
+                color="success"
+                sx={{
+                  "& > :not(style)": { m: 1, width: "40ch" },
+                }}
+                onClick={() => {
+                  // console.log(formVal);
+                  getServices();
+                }}
+              >
+                Search
+              </Button>
+              <Typography
+                variant="body2"
+                gutterBottom
+                sx={{ textAlign: "center" }}
+              >
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                blanditiis tenetur unde suscipit, quam beatae rerum inventore
+                consectetur, neque doloribus,
+              </Typography>
+            </Box>
+          </Grid>
+        )}
+
         <Grid item xl={9} lg={12}>
           <ReactMapGl
             {...viewport}
