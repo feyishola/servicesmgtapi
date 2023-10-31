@@ -76,34 +76,7 @@ class AppServer {
           let recipientSockId2 = await redisCli.get(phone);
 
           console.log({ recipientSockId2 });
-
-          //   redisCli.set(phone, recipient, (err, res) => {
-          //   if (err) {
-          //     console.log(err);
-          //   } else {
-          //     console.log(res);
-          //   }
-          // });
         }
-        // } else if (id) {
-        // console.log({ else: id });
-        // // socket.join(id);
-
-        // redisCli.set(phone, room, (err, res) => {
-        //   if (err) {
-        //     console.log(err);
-        //   } else {
-        //     console.log(res);
-        //   }
-        // });
-
-        // // socket.to(room).emit("serverResponse", message);
-        // socket.to(id).emit("serverResponse", message);
-        // socket.emit("myMsg", message);
-        // } else {
-        // console.log({ msgFromClient: message });
-        // socket.broadcast.emit("serverResponse", message);
-        // }
       });
 
       socket.on("disconnect", () => {

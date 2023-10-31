@@ -4,8 +4,8 @@ module.exports = async () => {
   const redisPort = process.env.REDIS_PORT || 6379;
   const client = redis.createClient({
     url: "rediss://oregon-redis.render.com:6379",
-    username: "red-cko5mpcve64s739t1d4g",
-    password: "Lc3Rucy7nyGHNPIkyN5vGKsMXCRZnVR8",
+    username: "red-ckoj2c0ujous73eg1gv0",
+    password: "CUq8rhCoCknwxxuMHZiOkod6moHl85TS",
   });
 
   await client.connect();
