@@ -8,6 +8,10 @@ module.exports = async () => {
     password: "CUq8rhCoCknwxxuMHZiOkod6moHl85TS",
   });
 
+  // const client = redis.createClient({
+  //   url: "rediss://127.0.0.1:6379",
+  // });
+
   await client.connect();
 
   // Test the connection

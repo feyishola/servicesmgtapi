@@ -1,0 +1,5 @@
+**/.dockerignore
+**/.env
+**/.git
+**/node_modules
+**/Dockerfile*

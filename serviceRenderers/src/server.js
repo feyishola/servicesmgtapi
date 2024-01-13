@@ -25,11 +25,18 @@ class AppServer {
 
     const PORT = process.env.PORT || 5000;
 
-    const redisCli = await redis_client;
-    // const key = "id";
+    let redisCli;
+
+    try {
+      redisCli = await redis_client;
+      // const key = "id";
+    } catch (err) {
+      console.error("failed to connect to redis", err);
+      return;
+    }
 
     server.listen(PORT, () => {
-      console.log(`connected to ${PORT}`);
+      console.log(`Server connected on port ${PORT}`);
     });
 
     this.#io.on("connection", (socket) => {
@@ -52,10 +59,9 @@ class AppServer {
       // using user(phone number) frm servicerenderingpage to search the redisdb for socketid
       socket.on("user", async (user) => {
         let res = await redisCli.get(user);
-        if (res != null || res != undefined) {
+        if (res != null && res != undefined) {
           socket.emit("sockId", res);
         }
-        // console.log({ res });
       });
       //test
       // socket.on("senderSockId", (res) => console.log({ sendersid: res }));
@@ -63,19 +69,18 @@ class AppServer {
       socket.on("messageToClient", () => {});
 
       socket.on("msgFromClient", async (message, phone) => {
-        // console.log("received from client", message);
-        // brodcast from io to clients
-
-        let { mySockId, recipientSockId, body } = message;
+        let { recipientSockId, body } = message;
 
         if (recipientSockId) {
           socket.to(recipientSockId).emit("serverResponse", message);
-          // socket.to(id).emit("serverResponse", message);
           socket.emit("myMsg", message);
         } else {
-          let recipientSockId2 = await redisCli.get(phone);
-
-          console.log({ recipientSockId2 });
+          try {
+            let recipientSockId2 = await redisCli.get(phone);
+            console.log({ recipientSockId2 });
+          } catch (err) {
+            console.error("Redis error:", err);
+          }
         }
       });
 
