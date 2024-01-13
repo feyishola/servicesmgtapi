@@ -17,39 +17,29 @@ export const ChatPage = () => {
   const [room, setRoom] = useState();
   const [resmsg, setresmsg] = useState();
 
-  socket.on("serverResponse", (res) => {
-    console.log({ tesingphase: res });
-    setresmsg(res);
-    receivedMessage(res);
-  });
+  useEffect(() => {
+    function receivedMessage(message) {
+      console.log({ messages });
+      setMessages((oldMsgs) => [...oldMsgs, message]);
+    }
 
-  socket.on("myMsg", (res) => {
-    // console.log({ myMsg: res });
-    receivedMessage(res);
-  });
+    socket.on("serverResponse", (res) => {
+      console.log({ tesingphase: res });
+      setresmsg(res);
+      receivedMessage(res);
+    });
 
-  // useEffect(() => {
-  // socketRef.current = io("http://127.0.0.1:5000");
-  // socketRef.current.on("socketId", (id) => {
-  //   // console.log({ id });
-  //   setYourID(id);
-  // });
+    socket.on("myMsg", (res) => {
+      // console.log({ myMsg: res });
+      receivedMessage(res);
+    });
 
-  // socketRef.current.on("serverResponse", (res) => {
-  //   // console.log({ res });
-  //   receivedMessage(res);
-  // });
-
-  // socketRef.current.on("myMsg", (res) => {
-  //   // console.log({ myMsg: res });
-  //   receivedMessage(res);
-  // });
-  // }, []);
-
-  function receivedMessage(message) {
-    console.log({ messages });
-    setMessages((oldMsgs) => [...oldMsgs, message]);
-  }
+    // Cleanup function to unregister event listeners
+    return () => {
+      socket.off("serverResponse");
+      socket.off("myMsg");
+    };
+  }, [socket]);
 
   function sendMsg() {
     const phone = localStorage.getItem("phoneId");
@@ -191,11 +181,15 @@ export const ChatPage = () => {
             outlineStyle: "none",
             fontSize: "17px",
             outline: "none",
-            color: "lightgray",
+            // color: "white",
             letterSpacing: "1px",
             lineHeight: "20px",
             border: "none",
             "& fieldset": { border: "none" },
+            "& .MuiInputBase-input": {
+              // Target the input element directly
+              color: "white", // Set text color to white
+            },
           }}
           onChange={(e) => setMsg(e.target.value)}
         />

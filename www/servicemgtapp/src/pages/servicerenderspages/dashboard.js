@@ -40,7 +40,11 @@ export const SRDashboard = () => {
   return (
     <Box sx={{ backgroundColor: "#f0f2f5", height: "100vh" }}>
       <Box mb={3} />
-      <Grid container spacing={3}>
+      <Grid
+        container
+        spacing={2}
+        sx={{ display: "flex", justifyContent: "space-around" }}
+      >
         <Grid item xs={12} md={6} lg={3}>
           <ComplexStatisticsCard
             color="success"
@@ -98,7 +102,7 @@ export const SRDashboard = () => {
           />
         </Grid>
       </Grid>
-      <Box mt={5}>
+      {/* <Box mt={5}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={4}>
             <ReportsBarChart
@@ -139,7 +143,92 @@ export const SRDashboard = () => {
             <ReactTable />
           </Grid>
         </Grid>
+      </Box> */}
+      <Grid container spacing={3} mt={3}>
+        <Grid item xs={12} md={6} lg={4}>
+          <ReportsBarChart
+            color="info"
+            bgColor={"#49a3f1"}
+            title="website views"
+            description="Weekly website views"
+            date="3rd week July"
+            chart={reportsBarChartData}
+          />
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <ReportsLineChart
+            // color="success"
+            bgColor={"#66BB6A"}
+            title="daily sales"
+            description={
+              <>
+                (<strong>+15%</strong>) increase in today sales.
+              </>
+            }
+            date="updated 4 min ago"
+            chart={sales}
+          />
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <ReportsLineChart
+            bgColor={"#42424a"}
+            title="Yearly reviews"
+            description="Last Campaign Performance"
+            date="just updated"
+            chart={tasks}
+          />
+        </Grid>
+      </Grid>
+      <Box mb={3}>
+        <Grid container spacing={3} mt={3} mb={3}>
+          <Grid item xs={12} md={12} lg={12}>
+            <ReactTable />
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   );
 };
+
+// return (
+//   <Box sx={{ backgroundColor: "#f0f2f5", height: "100vh" }}>
+//     <Box mb={3} />
+//     <Grid container spacing={3}>
+//       {/* Adjusting Grid items for Statistics Cards */}
+//       <Grid item xs={12} sm={6} md={4} lg={3}>
+//         <ComplexStatisticsCard /* your props here */ />
+//       </Grid>
+//       <Grid item xs={12} sm={6} md={4} lg={3}>
+//         <ComplexStatisticsCard /* your props here */ />
+//       </Grid>
+//       <Grid item xs={12} sm={6} md={4} lg={3}>
+//         <ComplexStatisticsCard /* your props here */ />
+//       </Grid>
+//       <Grid item xs={12} sm={6} md={4} lg={3}>
+//         <ComplexStatisticsCard /* your props here */ />
+//       </Grid>
+//     </Grid>
+
+//     <Box mt={5}>
+//       <Grid container spacing={3}>
+//         {/* Adjusting Grid items for Charts */}
+//         <Grid item xs={12} md={6} lg={4}>
+//           <ReportsBarChart /* your props here */ />
+//         </Grid>
+//         <Grid item xs={12} md={6} lg={4}>
+//           <ReportsLineChart /* your props here */ />
+//         </Grid>
+//         <Grid item xs={12} md={6} lg={4}>
+//           <ReportsLineChart /* your props here */ />
+//         </Grid>
+//       </Grid>
+
+//       {/* Full-width Grid item for Table */}
+//       <Grid container spacing={3} mt={3}>
+//         <Grid item xs={12}>
+//           <ReactTable />
+//         </Grid>
+//       </Grid>
+//     </Box>
+//   </Box>
+// );

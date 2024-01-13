@@ -44,7 +44,7 @@ import ScheduleIcon from "@mui/icons-material/Schedule";
 
 // ReportsLineChart configurations
 import configs from "./configs";
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 
 ChartJS.register(
   CategoryScale,
@@ -60,7 +60,12 @@ ChartJS.register(
 function ReportsLineChart({ bgColor, color, title, description, date, chart }) {
   const { data, options } = configs(chart.labels || [], chart.datasets || {});
 
+  // Make sure the chart is responsive
+  options.responsive = true;
+  options.maintainAspectRatio = false; // This allows the chart to fit into the container height
+
   return (
+    // <Grid item xs={6} md={6} lg={12}>
     <Card sx={{ height: "100%" }}>
       <Box padding="1rem">
         {useMemo(
@@ -73,7 +78,7 @@ function ReportsLineChart({ bgColor, color, title, description, date, chart }) {
               py={2}
               pr={0.5}
               mt={-5}
-              height="12.5rem"
+              // height="12.5rem"
             >
               <Line data={data} options={options} redraw />
             </Box>
@@ -110,6 +115,7 @@ function ReportsLineChart({ bgColor, color, title, description, date, chart }) {
         </Box>
       </Box>
     </Card>
+    // </Grid>
   );
 }
 

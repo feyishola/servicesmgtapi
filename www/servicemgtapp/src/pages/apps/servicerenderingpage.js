@@ -47,10 +47,10 @@ function ServiceRendering() {
   const navigate = useNavigate();
 
   socket.on("sockId", (res) => {
-    console.log(res);
+    console.log({ "res >>>>>": res });
     setSockId(res);
   });
-
+  console.log({ sockId });
   // const [idx, setId] = useState(id);
 
   // const [Id, setId] = useState();
@@ -129,6 +129,24 @@ function ServiceRendering() {
   };
 
   useEffect(() => {
+    // This effect runs when 'sockId' changes
+    if (sockId) {
+      setRecipient(sockId);
+      navigate("/chat");
+    }
+  }, [sockId, setRecipient, navigate]);
+
+  const handleChatButtonClick = () => {
+    if (selectedMarker && selectedMarker.phoneNumber) {
+      // Emitting user event to socket
+      socket.emit("user", selectedMarker.phoneNumber);
+      console.log(selectedMarker.phoneNumber);
+    } else {
+      console.log("No selected marker or phone number available.");
+    }
+  };
+
+  useEffect(() => {
     getCurrentLocation();
     // const sockettRef = io("http://localhost:5000");
     // sockettRef.on("socketId", (id) => {
@@ -167,7 +185,18 @@ function ServiceRendering() {
     //   }
     // };
     // fetchServices();
-  }, []);
+    const handleSockId = (res) => {
+      console.log({ res });
+      setSockId(res);
+    };
+
+    socket.on("sockId", handleSockId);
+
+    // Cleanup on unmount
+    return () => {
+      socket.off("sockId", handleSockId);
+    };
+  }, [socket]);
 
   return (
     <div
@@ -267,6 +296,7 @@ function ServiceRendering() {
                 </Button>
               )}
               <br />
+
               <Button
                 variant="contained"
                 color="success"
@@ -356,24 +386,10 @@ function ServiceRendering() {
                   <p>Phone number: {selectedMarker.phoneNumber}</p>
                   <Box>
                     <Button
-                      onClick={() => {
-                        // redis get key
-                        socket.emit("user", selectedMarker.phoneNumber);
-                        // console.log(selectedMarker.phoneNumber);
-                        // console.log(sockId);
-                        if (sockId) {
-                          // setChatIcon(true);
-                          setRecipient(sockId);
-                          // socket.emit(
-                          //   "senderSockId",
-                          //   localStorage.getItem("socketIdn")
-                          // );
-                          navigate("/chat");
-                        }
-                        // alert("recipient is offline!");
-                      }}
+                      onClick={handleChatButtonClick}
+                      aria-label="Start chat"
                     >
-                      Double click to chat
+                      {loading ? "Connecting..." : "Chat Now"}{" "}
                     </Button>
                   </Box>
                 </div>
@@ -388,3 +404,36 @@ function ServiceRendering() {
 }
 
 export default ServiceRendering;
+
+{
+  /* <Button
+                      onClick={async () => {
+                        setLoading(true); // Assuming you have a state to track loading
+                        try {
+                          // Emit socket event and wait for response if necessary
+                          socket.emit("user", selectedMarker.phoneNumber);
+
+                          // You might need to implement logic here to wait for socket response
+
+                          if (sockId) {
+                            setRecipient(sockId);
+                            navigate("/chat");
+                          } else {
+                            // Handle the case when sockId is not available
+                            alert(
+                              "The recipient appears to be offline. Please try again later."
+                            );
+                          }
+                        } catch (error) {
+                          console.error("Error:", error);
+                          // Handle any errors
+                        } finally {
+                          setLoading(false);
+                        }
+                      }}
+                      aria-label="Start chat"
+                    >
+                      {loading ? "Connecting..." : "Chat Now"}{" "}
+                      {/* Show loading state */
+}
+// </Button> */}

@@ -1,5 +1,12 @@
 import React from "react";
-import { Card, CardContent, Typography, Box, Divider } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Divider,
+  Grid,
+} from "@mui/material";
 import Icon from "@mui/material/Icon";
 import HomeIcon from "@mui/icons-material/Home";
 
@@ -33,8 +40,25 @@ export function ComplexStatisticsCard({
   bgcolor,
 }) {
   return (
-    <Card>
-      <Box display="flex" justifyContent="space-between" pt={1} px={2}>
+    // <Grid item xs={6} md={6} lg={12}>
+    <Card
+    // sx={{
+    //   bgcolor: "green",
+    //   width: {
+    //     lg: "300px", // Width on large screens
+    //     md: "250px", // Width on medium screens
+    //     sm: "200px", // Width on small screens
+    //     xs: "200px", // Full width on extra small screens
+    //   },
+    // }}
+    >
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        pt={1}
+        px={2}
+        // bgcolor={"yellow"}
+      >
         <Box
           variant="gradient"
           bgcolor={bgcolor}
@@ -44,10 +68,10 @@ export function ComplexStatisticsCard({
           display="flex"
           justifyContent="center"
           alignItems="center"
-          width="4rem"
+          // width="4rem"
           height="4rem"
           mt={-1}
-          p={4}
+          p={2}
           boxShadow={8}
         >
           {/* <Icon fontSize="medium" color="inherit">
@@ -58,7 +82,7 @@ export function ComplexStatisticsCard({
             <ContentCopyIcon fontSize="medium" style={{ color: "white" }} />
           )} */}
         </Box>
-        <Box textAlign="right" lineHeight={1.25}>
+        <Box flex={1} textAlign="right" lineHeight={1.25} ml={2}>
           <Typography variant="button" fontWeight="light" color="text">
             {title}
           </Typography>
@@ -80,5 +104,6 @@ export function ComplexStatisticsCard({
         </Typography>
       </Box>
     </Card>
+    // </Grid>
   );
 }

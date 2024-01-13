@@ -43,7 +43,7 @@ import ScheduleIcon from "@mui/icons-material/Schedule";
 
 // ReportsBarChart configurations
 import configs from "./configs";
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 
 ChartJS.register(
   CategoryScale,
@@ -57,7 +57,10 @@ ChartJS.register(
 function ReportsBarChart({ color, title, description, date, chart, bgColor }) {
   const { data, options } = configs(chart.labels || [], chart.datasets || {});
 
+  options.responsive = true;
+
   return (
+    // <Grid item xs={6} md={6} lg={12}>
     <Card sx={{ height: "100%" }}>
       <Box padding="1rem">
         {useMemo(
@@ -78,7 +81,7 @@ function ReportsBarChart({ color, title, description, date, chart, bgColor }) {
               <Bar data={data} options={options} redraw />
             </Box>
           ),
-          [color, chart]
+          [color, chart, data, options, bgColor]
         )}
         <Box pt={3} pb={1} px={1}>
           <Typography variant="h6" textTransform="capitalize">
@@ -110,6 +113,7 @@ function ReportsBarChart({ color, title, description, date, chart, bgColor }) {
         </Box>
       </Box>
     </Card>
+    // </Grid>
   );
 }
 
