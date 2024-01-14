@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  webservicerender:
+    depends_on:
+      - servicerendersapi
+    build: ./www/servicemgtapp
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_MAPBOX_TOKEN=pk.eyJ1IjoiYXJhanRhIiwiYSI6ImNsMGRlMmQzZTA4NG0zZHBvcW1yYnhseDUifQ.Ks6svhgtp-klQ__3qQbS9A
+      - baseUrl=https://sample-project-kntm.onrender.com/api/v1
+
+  servicerendersapi:
+    build: ./serviceRenderers
+    ports:
+      - 5000:5000
+    environment:
+      - GEOCODER_PROVIDER=mapquest
+      - GEOCODER_API_KEY=uLSJGs9DjOibXrxsJXmGfb4PeUumYK1o
+      - MONGO_URI=mongodb+srv://ddld93:1234567890@cluster0.fljiocn.mongodb.net/services?retryWrites=true&w=majority
+      - PORT=5000
+      - SECRET_KEY=1eef53f02997c809b1567120b97f985560e568c93d1dc57300f9ace1b8c4cc9b511b5cb650560a3b99189499af8ea410afd77691b18e9e1c4ebac457f85bd12c
+      - REDIS_PORT=6379
+
+
+  
+  
