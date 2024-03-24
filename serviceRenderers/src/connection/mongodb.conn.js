@@ -1,20 +1,24 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-module.exports = async ()=>{
+module.exports = async () => {
+  try {
+    const dbConn = mongoose.connection;
 
-    const dbConn = mongoose.connection
-    
-    dbConn.on('connected', ()=>{
+    dbConn
+      .on("connected", () => {
         console.log("connected to mongodb");
-    })
-    .on('error', (err)=>{
-        console.log('error occured on connecting to mongo', err.message);
-    })
-    .on('disconnected', ()=>{
-        setTimeout(async()=>{
-            await mongoose.connect(process.env.MONGO_URI)
-        },3000)
-    })
+      })
+      .on("error", (err) => {
+        console.log("error occured on connecting to mongo", err.message);
+      })
+      .on("disconnected", () => {
+        setTimeout(async () => {
+          await mongoose.connect(process.env.MONGO_URI);
+        }, 3000);
+      });
 
-    await mongoose.connect(process.env.MONGO_URI)
-}
+    await mongoose.connect(process.env.MONGO_URI);
+  } catch (error) {
+    console.log("error occured on connecting to mongo", error.message);
+  }
+};

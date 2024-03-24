@@ -145,7 +145,7 @@ module.exports = new ServiceProviderDao();
 //         console.log({ result });
 //         return result;
 
-//         // Then i tried is but didnt work
+//         // Then i tried dis but didnt work
 
 //         const result = await renderModel.aggregate([
 //             {
