@@ -11,65 +11,89 @@ class ServiceProviderDao {
     ratings,
     password
   ) {
-    const newserviceProvider = new renderModel({
-      serviceRendererName,
-      phoneNumber,
-      services,
-      locationUpdate,
-      permanentAddress,
-      temporaryAddress,
-      ratings,
-      password,
-    });
-    const result = await newserviceProvider.save();
-    return result;
+    try {
+      const newserviceProvider = new renderModel({
+        serviceRendererName,
+        phoneNumber,
+        services,
+        locationUpdate,
+        permanentAddress,
+        temporaryAddress,
+        ratings,
+        password,
+      });
+      const result = await newserviceProvider.save();
+      return result;
+    } catch (error) {
+      return error.message;
+    }
   }
 
   async getServiceProvider(id) {
-    let result = await renderModel.findById(id);
-    return result;
+    try {
+      let result = await renderModel.findById(id);
+      return result;
+    } catch (error) {
+      return error.message;
+    }
   }
 
   async getAllServiceProviders() {
-    const result = await renderModel.find();
-    return result;
+    try {
+      const result = await renderModel.find();
+      return result;
+    } catch (error) {
+      return error.message;
+    }
   }
 
   async getRequiredServiceProviders(service, lng, lat, meters) {
-    const result = await renderModel.aggregate([
-      {
-        $geoNear: {
-          near: {
-            type: "Point",
-            coordinates: [lng, lat],
+    try {
+      const result = await renderModel.aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: "Point",
+              coordinates: [lng, lat],
+            },
+            distanceField: "distance",
+            spherical: true,
+            maxDistance: meters,
           },
-          distanceField: "distance",
-          spherical: true,
-          maxDistance: meters,
         },
-      },
-      {
-        $match: {
-          services: { $regex: service, $options: "i" },
+        {
+          $match: {
+            services: { $regex: service, $options: "i" },
+          },
         },
-      },
-    ]);
+      ]);
 
-    //   In this code, we first use $geoNear to find the documents within a 5000 meter/ a certain distance in meters radius of the given coordinates. We then use $match to filter the results based on the service name. The $regex operator is used to perform a case-insensitive search for the given service name. You can check down for the struggle before arriving at dis
-    return result;
+      //   In this code, we first use $geoNear to find the documents within a 5000 meter/ a certain distance in meters radius of the given coordinates. We then use $match to filter the results based on the service name. The $regex operator is used to perform a case-insensitive search for the given service name. You can check down for the struggle before arriving at dis
+      return result;
+    } catch (error) {
+      return error.message;
+    }
   }
 
   async getUser(phoneNumber) {
-    const result = await renderModel.findOne({ phoneNumber });
-    return result;
+    try {
+      const result = await renderModel.findOne({ phoneNumber });
+      return result;
+    } catch (error) {
+      return error.message;
+    }
   }
 
   async rateUser(phoneNumber, ratings) {
-    const result = await renderModel.findOneAndUpdate(
-      { phoneNumber },
-      { $set: { ratings } }
-    );
-    return "thank you";
+    try {
+      const result = await renderModel.findOneAndUpdate(
+        { phoneNumber },
+        { $set: { ratings } }
+      );
+      return "thank you";
+    } catch (error) {
+      return error.message;
+    }
   }
 
   async updateServiceProvider(
@@ -82,26 +106,34 @@ class ServiceProviderDao {
     userType,
     password
   ) {
-    const updates = await renderModel.findByIdAndUpdate(
-      { _id: id },
-      {
-        $set: {
-          phoneNumber,
-          services,
-          locationUpdate,
-          permanentAddress,
-          temporaryAddress,
-          userType,
-          password,
-        },
-      }
-    );
-    return updates;
+    try {
+      const updates = await renderModel.findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            phoneNumber,
+            services,
+            locationUpdate,
+            permanentAddress,
+            temporaryAddress,
+            userType,
+            password,
+          },
+        }
+      );
+      return updates;
+    } catch (error) {
+      return error.message;
+    }
   }
 
   async deleteServiceProvider(id) {
-    const serviceProvider = await renderModel.findByIdAndDelete(id);
-    return "ServiceProvider deleted Successfully";
+    try {
+      const serviceProvider = await renderModel.findByIdAndDelete(id);
+      return "ServiceProvider deleted Successfully";
+    } catch (error) {
+      return error.message;
+    }
   }
 }
 
