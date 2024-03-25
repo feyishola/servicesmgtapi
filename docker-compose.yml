@@ -24,6 +24,6 @@ services:
       - SECRET_KEY=1eef53f02997c809b1567120b97f985560e568c93d1dc57300f9ace1b8c4cc9b511b5cb650560a3b99189499af8ea410afd77691b18e9e1c4ebac457f85bd12c
       - REDIS_PORT=6379
 
-
+# mongodb+srv://jibwisuser:@Feyish0lab0yAdmin@cluster0.euefrns.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
   
   
