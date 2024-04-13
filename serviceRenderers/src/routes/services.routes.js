@@ -101,7 +101,7 @@ module.exports = () => {
         ratings,
         newPassword
       );
-
+      console.log(result);
       res.status(200).json({ response: true, payload: result });
     } catch (error) {
       res.status(400).json({ response: false, payload: error.message });

@@ -11,6 +11,7 @@ const SrRegistrationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Perform registration logic here
+    console.log(formData);
     try {
       const res = await postRequest("/services/", formData);
 
