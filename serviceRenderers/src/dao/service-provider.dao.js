@@ -38,6 +38,9 @@ class ServiceProviderDao {
   getRequiredServiceProviders(service, lng, lat, meters, limit = 50) {
     const geoNear = {
       near: { type: "Point", coordinates: [lng, lat] },
+      // Name the field explicitly: older databases still carry a v1 index on
+      // location.coordinates, and $geoNear refuses to guess between two
+      key: "location",
       distanceField: "distance",
       spherical: true,
       query: { services: { $regex: escapeRegex(service), $options: "i" } },
