@@ -32,7 +32,7 @@ import { OnlineDot } from "../components/ProviderAvatar";
 import { useSocketEvent } from "../context/SocketContext";
 import { useGeolocation } from "../lib/useGeolocation";
 import { api } from "../lib/api";
-import { DEFAULT_RADIUS, RADII, formatDistance, radiusCovering, radiusFor, shortArea } from "../lib/format";
+import { DEFAULT_RADIUS, RADII, formatDistance, radiusCovering, radiusFor } from "../lib/format";
 import { tokens } from "../theme";
 
 const CURRENT_LOCATION = "Current location";
@@ -233,7 +233,8 @@ export function SearchPage() {
     setTimeout(() => addressRef.current?.focus(), 0);
   };
 
-  const area = state.center?.address ? shortArea(state.center.address) : nearMe ? "you" : shortArea(address);
+  // Echo the place in the words the person typed, not the geocoder's label
+  const area = nearMe ? "you" : address;
   const radius = radiusFor(meters);
 
   const list = (

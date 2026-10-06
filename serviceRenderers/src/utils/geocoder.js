@@ -18,10 +18,23 @@ const getJson = async (url, timeout = TIMEOUT_MS) => {
 
 // Each provider resolves to { lng, lat, formattedAddress }, null for "no match",
 // or throws when the service itself is unavailable.
+// "Maitama, Abuja, Federal Capital Territory, Nigeria" rather than the nearest
+// landmark Nominatim happened to match ("Embassy of …, 9, Maracaibo Close, …")
+const areaLabel = (a = {}) =>
+  [
+    a.suburb || a.neighbourhood || a.quarter || a.city_district || a.road,
+    a.city || a.town || a.village || a.county,
+    a.state,
+    a.country,
+  ]
+    .filter((part, i, all) => part && all.indexOf(part) === i)
+    .join(", ");
+
 const nominatim = async (address) => {
-  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(address)}`;
+  const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&addressdetails=1&q=${encodeURIComponent(address)}`;
   const [match] = await getJson(url);
-  return match ? { lng: Number(match.lon), lat: Number(match.lat), formattedAddress: match.display_name } : null;
+  if (!match) return null;
+  return { lng: Number(match.lon), lat: Number(match.lat), formattedAddress: areaLabel(match.address) || match.display_name };
 };
 
 // Photon (komoot) is a second keyless OpenStreetMap geocoder, used if Nominatim
