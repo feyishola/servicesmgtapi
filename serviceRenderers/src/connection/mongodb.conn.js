@@ -1,24 +1,12 @@
 const mongoose = require("mongoose");
+const { mongoUri } = require("../config");
 
 module.exports = async () => {
-  try {
-    const dbConn = mongoose.connection;
+  mongoose.connection
+    .on("connected", () => console.log("connected to mongodb"))
+    .on("error", (err) => console.error("mongodb error:", err.message))
+    .on("disconnected", () => console.warn("mongodb disconnected"));
 
-    dbConn
-      .on("connected", () => {
-        console.log("connected to mongodb");
-      })
-      .on("error", (err) => {
-        console.log("error occured on connecting to mongo", err.message);
-      })
-      .on("disconnected", () => {
-        setTimeout(async () => {
-          await mongoose.connect(process.env.MONGO_URI);
-        }, 3000);
-      });
-
-    await mongoose.connect(process.env.MONGO_URI);
-  } catch (error) {
-    console.log("error occured on connecting to mongo", error.message);
-  }
+  // mongoose retries on its own once the initial connection succeeds
+  await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 10000 });
 };

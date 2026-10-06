@@ -1,17 +1,10 @@
+// Allows the request through only when the signed-in user's type is in `userTypeArr`
 function Authorization(userTypeArr) {
   return (req, res, next) => {
-    if (req.user.userType) {
-      const category = "serviceProvider";
-      if (userTypeArr.includes(category)) {
-        return next();
-      } else {
-        return res
-          .status(403)
-          .json({ message: "Sorry you dont have permission to this route" });
-      }
-    } else {
-      return res.status(400).json({ message: "Invalid entry" });
-    }
+    if (userTypeArr.includes(req.user?.userType)) return next();
+    return res
+      .status(403)
+      .json({ response: false, payload: "You don't have permission to do that" });
   };
 }
 

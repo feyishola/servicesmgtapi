@@ -404,36 +404,3 @@ function ServiceRendering() {
 }
 
 export default ServiceRendering;
-
-{
-  /* <Button
-                      onClick={async () => {
-                        setLoading(true); // Assuming you have a state to track loading
-                        try {
-                          // Emit socket event and wait for response if necessary
-                          socket.emit("user", selectedMarker.phoneNumber);
-
-                          // You might need to implement logic here to wait for socket response
-
-                          if (sockId) {
-                            setRecipient(sockId);
-                            navigate("/chat");
-                          } else {
-                            // Handle the case when sockId is not available
-                            alert(
-                              "The recipient appears to be offline. Please try again later."
-                            );
-                          }
-                        } catch (error) {
-                          console.error("Error:", error);
-                          // Handle any errors
-                        } finally {
-                          setLoading(false);
-                        }
-                      }}
-                      aria-label="Start chat"
-                    >
-                      {loading ? "Connecting..." : "Chat Now"}{" "}
-                      {/* Show loading state */
-}
-// </Button> */}

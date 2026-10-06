@@ -1,250 +1,99 @@
 const renderModel = require("../model/renderer.model");
+const { escapeRegex } = require("../utils/helperfuctions");
+
+const PUBLIC_FIELDS = {
+  serviceRendererName: 1,
+  phoneNumber: 1,
+  services: 1,
+  bio: 1,
+  location: 1,
+  rating: 1,
+  ratingCount: 1,
+  distance: 1,
+  createdAt: 1,
+};
 
 class ServiceProviderDao {
-  async createServiceProvider(
-    serviceRendererName,
-    phoneNumber,
-    services,
-    locationUpdate,
-    permanentAddress,
-    temporaryAddress,
-    ratings,
-    password
-  ) {
-    try {
-      const newserviceProvider = new renderModel({
-        serviceRendererName,
-        phoneNumber,
-        services,
-        locationUpdate,
-        permanentAddress,
-        temporaryAddress,
-        ratings,
-        password,
-      });
-      const result = await newserviceProvider.save();
-      return result;
-    } catch (error) {
-      return error.message;
-    }
+  createServiceProvider({ serviceRendererName, phoneNumber, services, bio, location, password }) {
+    return renderModel.create({
+      serviceRendererName,
+      phoneNumber,
+      services,
+      bio,
+      location,
+      password,
+    });
   }
 
-  async getServiceProvider(id) {
-    try {
-      let result = await renderModel.findById(id);
-      return result;
-    } catch (error) {
-      return error.message;
-    }
+  getServiceProvider(id) {
+    return renderModel.findById(id);
   }
 
-  async getAllServiceProviders() {
-    try {
-      const result = await renderModel.find();
-      return result;
-    } catch (error) {
-      return error.message;
-    }
+  getUserWithPassword(phoneNumber) {
+    return renderModel.findOne({ phoneNumber }).select("+password");
   }
 
-  async getRequiredServiceProviders(service, lng, lat, meters) {
-    try {
-      const result = await renderModel.aggregate([
-        {
-          $geoNear: {
-            near: {
-              type: "Point",
-              coordinates: [lng, lat],
-            },
-            distanceField: "distance",
-            spherical: true,
-            maxDistance: meters,
-          },
-        },
-        {
-          $match: {
-            services: { $regex: service, $options: "i" },
-          },
-        },
-      ]);
+  // Providers offering `service` within `meters` of [lng, lat], nearest first.
+  // The service filter runs inside $geoNear so the geo index does the heavy lifting.
+  getRequiredServiceProviders(service, lng, lat, meters, limit = 50) {
+    const geoNear = {
+      near: { type: "Point", coordinates: [lng, lat] },
+      distanceField: "distance",
+      spherical: true,
+      query: { services: { $regex: escapeRegex(service), $options: "i" } },
+    };
+    if (meters) geoNear.maxDistance = meters;
 
-      //   In this code, we first use $geoNear to find the documents within a 5000 meter/ a certain distance in meters radius of the given coordinates. We then use $match to filter the results based on the service name. The $regex operator is used to perform a case-insensitive search for the given service name. You can check down for the struggle before arriving at dis
-      return result;
-    } catch (error) {
-      return error.message;
-    }
+    return renderModel.aggregate([
+      { $geoNear: geoNear },
+      { $limit: limit },
+      { $project: PUBLIC_FIELDS },
+    ]);
   }
 
-  async getUser(phoneNumber) {
-    try {
-      const result = await renderModel.findOne({ phoneNumber });
-      return result;
-    } catch (error) {
-      return error.message;
-    }
+  // Distinct services ranked by how many providers offer them
+  async getPopularServices(limit = 8) {
+    const rows = await renderModel.aggregate([
+      { $group: { _id: { $toLower: "$services" }, label: { $first: "$services" }, count: { $sum: 1 } } },
+      { $sort: { count: -1, _id: 1 } },
+      { $limit: limit },
+    ]);
+    return rows.map(({ label, count }) => ({ label, count }));
   }
 
-  async rateUser(phoneNumber, ratings) {
-    try {
-      const result = await renderModel.findOneAndUpdate(
-        { phoneNumber },
-        { $set: { ratings } }
-      );
-      return "thank you";
-    } catch (error) {
-      return error.message;
-    }
+  updateServiceProvider(id, updates) {
+    return renderModel.findByIdAndUpdate(id, { $set: updates }, { returnDocument: "after", runValidators: true });
   }
 
-  async updateServiceProvider(
-    id,
-    phoneNumber,
-    services,
-    locationUpdate,
-    permanentAddress,
-    temporaryAddress,
-    userType,
-    password
-  ) {
-    try {
-      const updates = await renderModel.findByIdAndUpdate(
-        { _id: id },
+  // Folds a new score into the running average atomically
+  addRating(id, score) {
+    return renderModel.findByIdAndUpdate(
+      id,
+      [
         {
           $set: {
-            phoneNumber,
-            services,
-            locationUpdate,
-            permanentAddress,
-            temporaryAddress,
-            userType,
-            password,
+            rating: {
+              $round: [
+                {
+                  $divide: [
+                    { $add: [{ $multiply: ["$rating", "$ratingCount"] }, score] },
+                    { $add: ["$ratingCount", 1] },
+                  ],
+                },
+                2,
+              ],
+            },
+            ratingCount: { $add: ["$ratingCount", 1] },
           },
-        }
-      );
-      return updates;
-    } catch (error) {
-      return error.message;
-    }
+        },
+      ],
+      { returnDocument: "after", updatePipeline: true }
+    );
   }
 
-  async deleteServiceProvider(id) {
-    try {
-      const serviceProvider = await renderModel.findByIdAndDelete(id);
-      return "ServiceProvider deleted Successfully";
-    } catch (error) {
-      return error.message;
-    }
+  deleteServiceProvider(id) {
+    return renderModel.findByIdAndDelete(id);
   }
 }
 
 module.exports = new ServiceProviderDao();
-
-//  getRequiredServiceProviders(service,lng,lat){
-
-//     // This worked but returnd all services based on search not minding how close or far
-
-//         const result = await renderModel.find({
-//             "$text":{"$search":service},
-//             "location":{
-//                 "$geoWithin":{
-//                     "$centerSphere":[[
-//                         lng,
-//                         lat
-//                     ],5000]
-//                 }
-//             }
-//         })
-
-//         return result
-
-//     // This returned an error "$match with $text is only allowed as the first pipeline stage" so the code used eventually fixed it
-
-//         const result = await renderModel.aggregate([
-//             {
-//             $geoNear: {
-//                 near: { type: "Point", coordinates: [lng, lat] },
-//                 distanceField: "distance",
-//                 spherical: true,
-//                 maxDistance: 5000
-//             }
-//             },
-//             {
-//             $match: {
-//                 $text: { $search: service }
-//             }
-//             }
-//         ]);
-//         console.log({ result });
-//         return result;
-
-//         // Then i tried dis but didnt work
-
-//         const result = await renderModel.aggregate([
-//             {
-//             "$search": {
-//                 "index": "services",
-//                 "compound": {
-//                 "must": [
-//                     {
-//                     "query_string": {
-//                         "query": service,
-//                         "default_operator": "AND",
-//                         "default_field": "services"
-//                     }
-//                     },
-//                     {
-//                     "geo_within": {
-//                         "circle": {
-//                         "center": {
-//                             "type": "Point",
-//                             "coordinates": [lng, lat]
-//                         },
-//                         "radius": 1000
-//                         },
-//                         "path": "location"
-//                     }
-//                     }
-//                 ]
-//                 }
-//             }
-//             }
-//         ]);
-//         return result
-
-//         // Tried dis but found out i needed to index my services in my schema and lots more
-
-//         const result = await renderModel.aggregate(
-//             [
-//                 {
-//                     "$search":{
-//                         "index":"String",
-//                         "compound":{
-//                             "must":[
-//                                 {
-//                                     "String":{
-//                                         "query":`${service}`,
-//                                         "path":"services"
-//                                     }
-//                                 },
-//                                 {
-//                                     "geoWithin":{
-//                                         "circle":{
-//                                             "center":{
-//                                                 "type":"Point",
-//                                                 "coordinates":[lng,lat]
-//                                             },
-//                                             "radius":1000
-//                                         },
-//                                         "path":"location"
-//                                     }
-//                                 }
-//                             ]
-//                         }
-//                     }
-//                 }
-//             ]
-//         )
-
-//         return result
-
-// }

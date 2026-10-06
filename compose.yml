@@ -1,41 +1,51 @@
-version: '3.3'
+# Full stack: docker compose up --build, then seed demo data with
+#   docker compose exec api npm run seed
+# Web: http://localhost:3000   API: http://localhost:5000
 
 services:
-  webservicerender:
-    depends_on:
-      - servicerendersapi
-    build: ./www/servicemgtapp
+  web:
+    build:
+      context: ./www/web
+      args:
+        VITE_API_URL: ${PUBLIC_API_URL:-http://localhost:5000}
     ports:
-      - 3000:3000
-    environment:
-      - REACT_APP_MAPBOX_TOKEN=pk.eyJ1IjoiYXJhanRhIiwiYSI6ImNsMGRlMmQzZTA4NG0zZHBvcW1yYnhseDUifQ.Ks6svhgtp-klQ__3qQbS9A
-      # - REACT_APP_MAPBOX_TOKEN=${REACT_APP_MAPBOX_TOKEN}
-      - baseUrl=https://sample-project-kntm.onrender.com/api/v1
-      # - baseUrl=http://localhost:5000/api/v1
+      - "3000:80"
+    depends_on:
+      - api
 
-  servicerendersapi:
+  api:
     build: ./serviceRenderers
     ports:
-      - 5000:5000
+      - "5000:5000"
     environment:
-      - GEOCODER_PROVIDER=mapquest
-      - GEOCODER_API_KEY=gNDLDmBsPohyLEp6R3LYLgYGqd9xinSx
-      - MONGO_URI=mongodb://mongo:27017/service-mgt-app
-      - PORT=5000
-      - SECRET_KEY=1eef53f02997c809b1567120b97f985560e568c93d1dc57300f9ace1b8c4cc9b511b5cb650560a3b99189499af8ea410afd77691b18e9e1c4ebac457f85bd12c
-      - REDIS_PORT=6379
+      PORT: 5000
+      MONGO_URI: mongodb://mongo:27017/service-mgt-app
+      REDIS_URL: redis://redis:6379
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env (see .env.example)}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      GEOCODER_PROVIDER: ${GEOCODER_PROVIDER:-openstreetmap}
+      GEOCODER_API_KEY: ${GEOCODER_API_KEY:-}
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
 
   mongo:
-    image: mongo
-    restart: always
+    image: mongo:7
     volumes:
       - mongovolume:/data/db
-    ports:
-      - 27017:27017
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
 
 volumes:
   mongovolume:
-
-# mongodb+srv://jibwisuser:Feyish0la12345@cluster0.euefrns.mongodb.net/servicemgtdb
-#mongodb://localhost:27017/service-mgt-app
-  

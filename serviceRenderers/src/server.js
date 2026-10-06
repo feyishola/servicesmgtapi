@@ -1,98 +1,126 @@
-const express = require("express");
-require("./connection/mongodb.conn")();
 const http = require("http");
-const routes = require("./routes/services.routes")();
-const socketio = require("socket.io");
+const express = require("express");
 const cors = require("cors");
-// const redis = require("redis");
-const redis_client = require("./connection/redis.conn")();
+const helmet = require("helmet");
+const jwt = require("jsonwebtoken");
+const { Server } = require("socket.io");
+const mongoose = require("mongoose");
+const connectMongo = require("./connection/mongodb.conn");
+const connectRedis = require("./connection/redis.conn");
+const createPresence = require("./utils/presence");
+const servicesRoutes = require("./routes/services.routes");
+const errorHandler = require("./middleware/errorhandler");
+const { port, secretKey, corsOrigin } = require("./config");
 
-class AppServer {
-  #io;
-  constructor() {
-    this.#init();
-  }
+const MAX_MESSAGE_LENGTH = 1000;
 
-  async #init() {
-    const app = express();
+const cleanText = (text) => String(text ?? "").trim().slice(0, MAX_MESSAGE_LENGTH);
 
-    app.use(express.urlencoded({ extended: true }));
-    app.use(express.json());
-    app.use(cors());
-    app.use("/api/v1/services", routes);
-    const server = http.createServer(app);
-    this.#io = socketio(server, { cors: { allow: "*" } });
+async function start() {
+  await connectMongo();
+  const presence = createPresence(await connectRedis());
 
-    const PORT = process.env.PORT || 5000;
+  const app = express();
+  const server = http.createServer(app);
+  const io = new Server(server, { cors: { origin: corsOrigin } });
 
-    let redisCli;
+  const notifyProvider = async (providerId, event, body) => {
+    const socketId = await presence.socketFor(providerId);
+    if (socketId) io.to(socketId).emit(event, body);
+  };
 
-    try {
-      redisCli = await redis_client;
-      // const key = "id";
-    } catch (err) {
-      console.error("failed to connect to redis", err);
-      return;
+  app.use(helmet());
+  app.use(cors({ origin: corsOrigin }));
+  app.use(express.json({ limit: "20kb" }));
+  app.get("/health", (req, res) =>
+    res.json({ status: "ok", mongo: mongoose.connection.readyState === 1 })
+  );
+  app.use("/api/v1/services", servicesRoutes({ presence, notifyProvider }));
+  app.use((req, res) => res.status(404).json({ response: false, payload: "Route not found" }));
+  app.use(errorHandler);
+
+  // Providers connect with their JWT so we can mark them online; customers
+  // connect anonymously and are identified only by their socket id.
+  io.use((socket, next) => {
+    const { token } = socket.handshake.auth || {};
+    if (token) {
+      try {
+        const user = jwt.verify(token, secretKey);
+        if (user.userType === "serviceProvider") socket.data.providerId = String(user.id);
+      } catch {
+        return next(new Error("session_expired"));
+      }
+    }
+    next();
+  });
+
+  io.on("connection", async (socket) => {
+    const { providerId } = socket.data;
+    socket.data.conversations = new Set();
+
+    if (providerId) {
+      await presence.goOnline(providerId, socket.id);
+      io.emit("presence:changed", { providerId, online: true });
     }
 
-    server.listen(PORT, () => {
-      console.log(`Server connected on port ${PORT}`);
+    // Customer -> provider. Acks tell the sender whether it was delivered live.
+    socket.on("chat:send", async ({ providerId: to, body, name } = {}, ack = () => {}) => {
+      const text = cleanText(body);
+      if (!to || !text) return ack({ delivered: false, reason: "empty" });
+
+      const target = await presence.socketFor(String(to));
+      if (!target) return ack({ delivered: false, reason: "offline" });
+
+      socket.data.conversations.add(target);
+      io.to(target).emit("chat:message", {
+        conversationId: socket.id,
+        from: "customer",
+        name: cleanText(name).slice(0, 40) || "Customer",
+        body: text,
+        at: Date.now(),
+      });
+      ack({ delivered: true, at: Date.now() });
     });
 
-    this.#io.on("connection", (socket) => {
-      console.log("connected to socket.io");
+    // Provider -> customer, addressed by the customer's socket id
+    socket.on("chat:reply", ({ conversationId, body } = {}, ack = () => {}) => {
+      const text = cleanText(body);
+      if (!socket.data.providerId) return ack({ delivered: false, reason: "unauthorised" });
+      if (!conversationId || !text) return ack({ delivered: false, reason: "empty" });
+      if (!io.sockets.sockets.has(conversationId)) return ack({ delivered: false, reason: "left" });
 
-      // Sending socket id to client
-      socket.emit("socketId", socket.id);
-
-      // listening for event
-      // setting the redisdb with phonenumber as key and socketid as value from login page
-      socket.on("forRedis", (user, id) => {
-        console.log(user, id);
-        redisCli.set(user, id, (err, res) => {
-          if (err) {
-            console.log(err);
-          }
-        });
+      io.to(conversationId).emit("chat:message", {
+        providerId: socket.data.providerId,
+        from: "provider",
+        body: text,
+        at: Date.now(),
       });
-
-      // using user(phone number) frm servicerenderingpage to search the redisdb for socketid
-      socket.on("user", async (user) => {
-        let res = await redisCli.get(user);
-        if (res != null && res != undefined) {
-          socket.emit("sockId", res);
-        }
-      });
-      //test
-      // socket.on("senderSockId", (res) => console.log({ sendersid: res }));
-
-      socket.on("messageToClient", () => {});
-
-      socket.on("msgFromClient", async (message, phone) => {
-        let { recipientSockId, body } = message;
-
-        if (recipientSockId) {
-          socket.to(recipientSockId).emit("serverResponse", message);
-          socket.emit("myMsg", message);
-        } else {
-          try {
-            let recipientSockId2 = await redisCli.get(phone);
-            console.log({ recipientSockId2 });
-          } catch (err) {
-            console.error("Redis error:", err);
-          }
-        }
-      });
-
-      socket.on("disconnect", () => {
-        console.log("disconnected from socket");
-      });
+      ack({ delivered: true, at: Date.now() });
     });
-  }
 
-  emitEvent(event, body) {
-    this.#io.emit(event, body);
-  }
+    socket.on("chat:typing", async ({ providerId: to, conversationId } = {}) => {
+      if (socket.data.providerId && conversationId) {
+        io.to(conversationId).emit("chat:typing", { providerId: socket.data.providerId });
+      } else if (to) {
+        const target = await presence.socketFor(String(to));
+        if (target) io.to(target).emit("chat:typing", { conversationId: socket.id });
+      }
+    });
+
+    socket.on("disconnect", async () => {
+      // Let providers know the customer closed the chat
+      for (const target of socket.data.conversations) {
+        io.to(target).emit("chat:left", { conversationId: socket.id });
+      }
+      const wentOffline = await presence.goOffline(socket.id);
+      if (wentOffline) io.emit("presence:changed", { providerId: wentOffline, online: false });
+    });
+  });
+
+  server.listen(port, () => console.log(`API listening on http://localhost:${port}`));
 }
 
-module.exports = new AppServer();
+start().catch((err) => {
+  console.error("failed to start:", err.message);
+  process.exit(1);
+});

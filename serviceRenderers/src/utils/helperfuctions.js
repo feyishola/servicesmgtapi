@@ -1,25 +1,21 @@
-const ratings = (
-  timeliness = 0,
-  communication = 0,
-  valueForMoney = 0,
-  customerService = 0,
-  professionalism = 0
-) => {
-  timeliness = Math.min(timeliness, 5);
-  communication = Math.min(communication, 5);
-  valueForMoney = Math.min(valueForMoney, 5);
-  customerService = Math.min(customerService, 5);
-  professionalism = Math.min(professionalism, 5);
+const clamp = (n) => Math.min(Math.max(Number(n) || 0, 0), 5);
 
-  let value =
-    (timeliness +
-      communication +
-      valueForMoney +
-      customerService +
-      professionalism) /
-    5;
-
-  return value;
+// Average of the five rating categories, each clamped to 0-5.
+// A single overall `score` can be sent instead of the categories.
+const ratings = ({
+  score,
+  timeliness,
+  communication,
+  valueForMoney,
+  customerService,
+  professionalism,
+}) => {
+  if (score !== undefined) return clamp(score);
+  const parts = [timeliness, communication, valueForMoney, customerService, professionalism];
+  return parts.reduce((sum, n) => sum + clamp(n), 0) / parts.length;
 };
 
-module.exports = ratings;
+// Escapes user input before it is used inside a RegExp
+const escapeRegex = (str) => String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+module.exports = { ratings, escapeRegex };

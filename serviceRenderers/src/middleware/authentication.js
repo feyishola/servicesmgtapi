@@ -1,21 +1,20 @@
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+const { secretKey } = require("../config");
 
 function Authentication(req, res, next) {
-  const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
-  if (token) {
-    try {
-      const verifiedToken = jwt.verify(token, process.env.SECRET_KEY);
+  const header = req.headers.authorization;
+  const token = header?.startsWith("Bearer ")
+    ? header.slice(7)
+    : req.headers["x-access-token"];
 
-      req.user = verifiedToken;
-    } catch (error) {
-      return res.status(403).json({ response: "Invalid token!!!" });
-    }
-  } else {
-    return res
-      .status(400)
-      .json({ response: "Token is required for authentication" });
+  if (!token) {
+    return res.status(401).json({ response: false, payload: "Please sign in to continue" });
+  }
+
+  try {
+    req.user = jwt.verify(token, secretKey);
+  } catch {
+    return res.status(401).json({ response: false, payload: "Your session has expired. Please sign in again" });
   }
   return next();
 }

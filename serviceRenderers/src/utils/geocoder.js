@@ -1,14 +1,44 @@
-const NodeGeocoder = require('node-geocoder');
+const NodeGeocoder = require("node-geocoder");
+const { geocoder: options } = require("../config");
 
-// 'node-geocoder' is a node library for geocoding and reverse geocoding. 
+// node-geocoder wraps several providers. OpenStreetMap (Nominatim) needs no key;
+// set GEOCODER_PROVIDER/GEOCODER_API_KEY to use mapquest, google, etc.
+const geocoder = NodeGeocoder({
+  provider: options.provider,
+  apiKey: options.apiKey,
+  formatter: null,
+  // Nominatim's usage policy requires an identifying user agent
+  fetch: (url, opts = {}) =>
+    fetch(url, {
+      ...opts,
+      headers: { ...opts.headers, "user-agent": "servicesmgtapi/2.0" },
+    }),
+});
 
-const options = {
-  provider: process.env.GEOCODER_PROVIDER, // There are a lot of geocoder such as google but would use "MapQuest"
-  httpAdapter: 'https',
-  apiKey: process.env.GEOCODER_API_KEY,     // This would be gotten wen u open an account with ur provider above; its called the Consumer Key
-  formatter: null
+class GeocodeError extends Error {}
+
+// Resolves a free-text address to { lng, lat, formattedAddress } or throws a
+// GeocodeError with a message that is safe to show to the user.
+const geocodeAddress = async (address) => {
+  let results;
+  try {
+    results = await geocoder.geocode(address);
+  } catch (err) {
+    throw new GeocodeError("We couldn't reach the location service. Please try again.");
+  }
+  const [match] = results || [];
+  if (!match) {
+    throw new GeocodeError(
+      `We couldn't find "${address}". Try adding the city or state.`
+    );
+  }
+  return {
+    lng: match.longitude,
+    lat: match.latitude,
+    formattedAddress:
+      match.formattedAddress ||
+      [match.streetName, match.city, match.state, match.country].filter(Boolean).join(", "),
+  };
 };
 
-const geocoder = NodeGeocoder(options);
-
-module.exports = geocoder;
+module.exports = { geocodeAddress, GeocodeError };

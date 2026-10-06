@@ -1,32 +1,32 @@
 const redis = require("redis");
+const { redisUrl } = require("../config");
+
+// A tiny key/value store with the same async get/set/del shape as the redis
+// client, used when REDIS_URL is not configured.
+const memoryStore = () => {
+  const map = new Map();
+  return {
+    get: async (key) => map.get(key) ?? null,
+    set: async (key, value) => void map.set(key, value),
+    del: async (key) => void map.delete(key),
+  };
+};
 
 module.exports = async () => {
+  if (!redisUrl) {
+    console.log("REDIS_URL not set, using in-memory presence store");
+    return memoryStore();
+  }
+
+  const client = redis.createClient({ url: redisUrl });
+  client.on("error", (err) => console.error("redis error:", err.message));
+
   try {
-    const redisPort = process.env.REDIS_PORT || 6379;
-    const client = redis.createClient({
-      url: "rediss://oregon-redis.render.com:6379",
-      username: "red-ckoj2c0ujous73eg1gv0",
-      password: "CUq8rhCoCknwxxuMHZiOkod6moHl85TS",
-    });
-
-    // const client = redis.createClient({
-    //   url: "rediss://127.0.0.1:6379",
-    // });
-
     await client.connect();
-
-    // Test the connection
-
-    client.on("ready", () => {
-      console.log("connected to redis successfully!");
-    });
-
-    client.on("error", (err) => {
-      console.log("Redis connection error", err);
-    });
-
+    console.log("connected to redis");
     return client;
-  } catch (error) {
-    console.log("Redis connection error", error.message);
+  } catch (err) {
+    console.error("could not connect to redis, falling back to memory:", err.message);
+    return memoryStore();
   }
 };

@@ -1,13 +1,17 @@
-FROM node:20-alpine3.18
+FROM node:24-alpine
 
 WORKDIR /app
+ENV NODE_ENV=production
 
 COPY package*.json ./
+RUN npm ci --omit=dev
 
-RUN npm install
+COPY src ./src
 
-COPY . .
-
+USER node
 EXPOSE 5000
 
-CMD npm start
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s \
+  CMD wget -qO- http://localhost:5000/health || exit 1
+
+CMD ["node", "src/app.js"]
