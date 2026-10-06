@@ -62,7 +62,8 @@ async function seed() {
     created += result.upsertedCount;
   }
 
-  await renderModel.syncIndexes();
+  // Only adds missing indexes; never drops existing ones on a shared database
+  await renderModel.createIndexes();
   console.log(`seeded ${created} new providers (${providers.length - created} already existed)`);
   console.log(`demo login: 08000000001 / ${DEMO_PASSWORD}`);
   await mongoose.disconnect();
