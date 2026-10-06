@@ -256,7 +256,12 @@ export function SearchPage() {
         <Alert
           severity="warning"
           action={
-            <Button color="inherit" onClick={() => setRetryKey((k) => k + 1)}>
+            <Button
+              color="inherit"
+              size="small"
+              sx={{ whiteSpace: "nowrap" }}
+              onClick={() => setRetryKey((k) => k + 1)}
+            >
               Try again
             </Button>
           }
